@@ -49,7 +49,7 @@ store.dispatch({ type: 'LEAVE' });
 
 If you would like to contribute, you can by completing one of the following tasks. Ones these are finished, we can start the sample project. When this all is finished, we can finally write the guide and go public.
 
-- [ ] Test Types
+- [x] Test Types
 - [ ] Test Props
 - [ ] Test State
 - [ ] Test Store
