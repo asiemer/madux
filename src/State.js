@@ -4,6 +4,7 @@
 import { Props } from './Props';
 import type { Prop, PropDefinition } from './Types';
 
+// Represents a state of the 
 class State {
 
   name: string;
