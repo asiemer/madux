@@ -51,7 +51,7 @@ If you would like to contribute, you can by completing one of the following task
 
 - [x] Test Types
 - [x] Test Props
-- [ ] Test State
+- [x] Test State
 - [ ] Test Store
 - [ ] Test Madux
 - [ ] Test Bounds
