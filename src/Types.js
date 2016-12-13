@@ -12,3 +12,7 @@ export type Action = {
   type: string;
   params: Object;
 };
+
+export type Dispatch = (action: Action) => void;
+
+export type Middleware = (disp: Dispatch) => Dispatch;

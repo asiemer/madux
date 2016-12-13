@@ -3,24 +3,25 @@
 
 import { State } from './State';
 import { SingleBound } from './Bounds';
-import type { Action } from './Types';
+import type { Action, Middleware, Dispatch } from './Types';
 
 class Machine {
 
   current: ?string;
   initial: ?string;
-  states: Map<string, State>;
-  structure: Map<string, Map<string, string>>;
+  states: Map<string, State> = new Map();
+  structure: Map<string, Map<string, string>> = new Map();
+  middlewares: Array<Middleware> = [];
 
-  constructor(states: Set<State>) {
+  constructor(states: Set<State>, middlewares: Array<Middleware> = []) {
     if (states.size < 1) { throw new Error('You need at least one state!'); }
-    this.states = new Map();
-    this.structure = new Map();
     states.forEach((state) => {
       if (!this.initial) this.initial = state.name;
       this.states.set(state.name, state);
       this.structure.set(state.name, new Map());
     });
+    this.middlewares = middlewares;
+    this.middlewares.reverse();
   }
 
   from(name: string): SingleBound { return new SingleBound(this, name); }
@@ -53,14 +54,16 @@ class Machine {
   }
 
   process(action: Action) {
-    const transition = action.type;
-    if (!this.current) { throw new Error('This machine is not started!'); }
-    const maps = this.structure.get(this.current);
-    if (maps) {
-      const destination = maps.get(transition);
-      if (destination) this.current = destination;
-      if (!destination) throw new Error('No destination found!');
-    } else { throw new Error('No map found, fatal!'); }
+    this.middlewares.reduce((d: Dispatch, f: Middleware) => f(d), (act: Action) => {
+      const transition = act.type;
+      if (!this.current) { throw new Error('This machine is not started!'); }
+      const maps = this.structure.get(this.current);
+      if (maps) {
+        const destination = maps.get(transition);
+        if (destination) this.current = destination;
+        if (!destination) throw new Error('No destination found!');
+      } else { throw new Error('No map found, fatal!'); }
+    })(action);
   }
 
 }
