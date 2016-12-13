@@ -41,9 +41,9 @@ var Store = function () {
   }, {
     key: 'dispatch',
     value: function dispatch(action) {
-      if (this.machine.canProcess(action)) {
+      if (this.machine.canDispatch(action)) {
         var _prv = this.machine.getCurrentState();
-        this.machine.process(action);
+        this.machine.dispatch(action);
         this.callListeners(_prv, action, this.machine.getCurrentState());
       } else {
         this.invalidAction(action);
