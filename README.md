@@ -55,7 +55,7 @@ If you would like to contribute, you can by completing one of the following task
 - [ ] Test Store
 - [ ] Test Madux
 - [x] Test Bounds
-- [ ] Test Machine
+- [x] Test Machine
 - [ ] Final Flow and Eslint revision
 - [ ] Update readme and version
 - [ ] Go open source
