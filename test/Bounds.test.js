@@ -30,7 +30,7 @@ describe('Bounds', () => {
     const machine = new Machine(new Set([state1, state2, state3]));
     const double = new DoubleBound(machine, state1.name, state2.name);
     expect(double.start).to.equal(state1.name);
-    expect(double.stop).to.equal(state2.name);
+    expect(double.end).to.equal(state2.name);
     expect(double.machine).to.equal(machine);
   });
 
@@ -38,7 +38,7 @@ describe('Bounds', () => {
     const machine = new Machine(new Set([state1, state2, state3]));
     const double = new SingleBound(machine, state1.name).to(state2.name);
     expect(double.start).to.equal(state1.name);
-    expect(double.stop).to.equal(state2.name);
+    expect(double.end).to.equal(state2.name);
     expect(double.machine).to.equal(machine);
   });
 
@@ -56,8 +56,8 @@ describe('Bounds', () => {
     const machine = new Machine(new Set([state1, state2, state3]));
     const double = new FullBound(machine, state1.name, state2.name, transition);
     expect(double.start).to.equal(state1.name);
-    expect(double.stop).to.equal(state2.name);
-    expect(double.trigger).to.equal(transition);
+    expect(double.end).to.equal(state2.name);
+    expect(double.actionType).to.equal(transition);
     expect(double.machine).to.equal(machine);
     const maps = machine.structure.get(state1.name);
     expect(!!maps).to.equal(true);
@@ -69,8 +69,8 @@ describe('Bounds', () => {
     const machine = new Machine(new Set([state1, state2, state3]));
     const double = new DoubleBound(machine, state1.name, state2.name).on(transition);
     expect(double.start).to.equal(state1.name);
-    expect(double.stop).to.equal(state2.name);
-    expect(double.trigger).to.equal(transition);
+    expect(double.end).to.equal(state2.name);
+    expect(double.actionType).to.equal(transition);
     expect(double.machine).to.equal(machine);
     const maps = machine.structure.get(state1.name);
     expect(!!maps).to.equal(true);

@@ -3,50 +3,85 @@
 
 import { Machine } from './Machine';
 
+// Represents a stransition from the start to the end state. Note that
+// states are always represented by their names! It also has a type
+// to know which actiontype will cause this transition to fire.
 class FullBound {
 
+  // Name of the start state of this transition.
   start: string;
-  stop: string;
-  trigger: string;
+
+  // Name of the end state of this transition.
+  end: string;
+
+  // Type of the action that causes this transition to fire.
+  actionType: string;
+
+  // The machine on which this transition lives.
   machine: Machine;
 
-  constructor(machine: Machine, start: string, stop: string, trigger: string) {
-    if (machine.states.has(start) && machine.states.has(stop)) {
+  // Creates a new isntance  of a transition. Note that when this transition
+  // is created, it will also be created in the given machine. Of course start
+  // and end should be names of states that are inside the given machine.
+  constructor(machine: Machine, start: string, end: string, actionType: string) {
+    if (machine.states.has(start) && machine.states.has(end)) {
       this.start = start;
-      this.stop = stop;
-      this.trigger = trigger;
+      this.end = end;
+      this.actionType = actionType;
       this.machine = machine;
-      machine.addTransition(start, stop, trigger);
+      machine.addTransition(start, end, actionType);
     } else { throw new Error('Invalid states for machine!'); }
   }
 
 }
 
+// This creates a transition where the actionType that triggers
+// the transition is not set yet. This is used to construct the
+// cool builder pattern to create transitions.
 class DoubleBound {
 
+  // Name of the start state of this transition.
   start: string;
-  stop: string;
+
+  // Name of the end state of this transition.
+  end: string;
+
+  // The machine of this transition.
   machine: Machine;
 
-  constructor(machine: Machine, start: string, stop: string) {
-    if (machine.states.has(start) && machine.states.has(stop)) {
+  // Creates a new instance of this transition, without the actionType
+  // that triggers it. Note state the start state and end state should
+  // be elements of the given machine.
+  constructor(machine: Machine, start: string, end: string) {
+    if (machine.states.has(start) && machine.states.has(end)) {
       this.machine = machine;
       this.start = start;
-      this.stop = stop;
+      this.end = end;
     } else { throw new Error('Invalid states for machine!'); }
   }
 
+  // Function to complete the builder pattern an combine an actionType
+  // that triggers this transition with this transition itself.
   on(trigger: string) {
-    return new FullBound(this.machine, this.start, this.stop, trigger);
+    return new FullBound(this.machine, this.start, this.end, trigger);
   }
 
 }
 
+// A half transition that is only bound to the start state. It does
+// not have an end or actionType that triggers the transition. This
+// is used for the builder pattern for transitions.
 class SingleBound {
 
+  // Name of the start state of the transition.
   start: string;
+
+  // The machine of this transition.
   machine: Machine;
 
+  // Creates a new instance of this SingleBound with given start state
+  // end machine. Of course the start state should be inside the given
+  // machine.
   constructor(machine: Machine, start: string) {
     if (machine.states.has(start)) {
       this.machine = machine;
@@ -54,9 +89,9 @@ class SingleBound {
     } else { throw new Error('Invalid state for machine!'); }
   }
 
-  to(stop: string) {
-    return new DoubleBound(this.machine, this.start, stop);
-  }
+  // Returns a DoubleBound to bind an end state to the end of this
+  // transition. Used to build transitions.
+  to(stop: string) { return new DoubleBound(this.machine, this.start, stop); }
 
 }
 

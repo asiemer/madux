@@ -4,18 +4,37 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+// Class with definitions of props to know whether or
+// not props can be accepted by a state.
 var Props = function () {
-  function Props(props) {
+
+  // Creates a new instance with the given defintions.
+  function Props() {
+    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
     _classCallCheck(this, Props);
 
     this.props = props;
   }
+
+  // It is also possible to add a definition of a prop after the
+  // Props instance is created.
+
+
+  // The defintions of the Props.
+
 
   _createClass(Props, [{
     key: 'addProp',
     value: function addProp(prop) {
       this.props.push(prop);
     }
+
+    // Checks if the provided dictionary (props) is can be accepted
+    // based on the definitions of this Props instance. This means that
+    // every prop which is required, should be in the props dictionary.
+    // Optional arguments can be present or not.
+
   }, {
     key: 'validate',
     value: function validate(props) {

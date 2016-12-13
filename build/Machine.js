@@ -77,6 +77,9 @@ var Machine = function () {
         throw new Error('Invalid transition for machine!');
       }
     }
+
+    // TODO: Also check state props...
+
   }, {
     key: 'canProcess',
     value: function canProcess(action) {

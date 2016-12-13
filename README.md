@@ -54,8 +54,9 @@ If you would like to contribute, you can by completing one of the following task
 - [x] Test State
 - [ ] Test Store
 - [ ] Test Madux
-- [ ] Test Bounds
+- [x] Test Bounds
 - [ ] Test Machine
+- [ ] Final Flow and Eslint revision
 - [ ] Update readme and version
 - [ ] Go open source
 - [ ] Add travis support
