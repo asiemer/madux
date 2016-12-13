@@ -8,7 +8,7 @@ import { SingleBound, DoubleBound, FullBound } from '../src/Bounds';
 
 const expect = chai.expect;
 
-describe('Props', () => {
+describe('Bounds', () => {
   const state1 = new State('A', []);
   const state2 = new State('B', []);
   const state3 = new State('C', []);

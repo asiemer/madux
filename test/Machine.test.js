@@ -7,7 +7,7 @@ import { Machine } from '../src/Machine';
 
 const expect = chai.expect;
 
-describe('Props', () => {
+describe('Machine', () => {
   const state1 = new State('A', []);
   const state2 = new State('B', []);
   const state3 = new State('C', []);

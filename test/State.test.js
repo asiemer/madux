@@ -6,7 +6,7 @@ import { State } from '../src/State';
 
 const expect = chai.expect;
 
-describe('Props', () => {
+describe('State', () => {
   const roomDefinition = { name: 'room', required: true };
   const streetDefinition = { name: 'street', required: true };
   const companionDefinition = { name: 'companion', required: false };
