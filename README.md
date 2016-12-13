@@ -57,6 +57,8 @@ If you would like to contribute, you can by completing one of the following task
 - [ ] Test Bounds
 - [ ] Test Machine
 - [ ] Update readme and version
+- [ ] Go open source
+- [ ] Add travis support
 - [ ] Publish alpha version
 
 Once you have cloned the repository, run `yarn install` to install all the dependencies. To build a new build folder, run `yarn build`. To run the test, use the `yarn test` command in the root of the project.
