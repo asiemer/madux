@@ -11,11 +11,11 @@ class Props {
   props: Array<PropDefinition>;
 
   // Creates a new instance with the given defintions.
-  constructor(props: Array<PropDefinition> = []) { this.props = props; }
+  constructor(props: Array<PropDefinition> = []): void { this.props = props; }
 
   // It is also possible to add a definition of a prop after the
   // Props instance is created.
-  addProp(prop: PropDefinition) { this.props.push(prop); }
+  addProp(prop: PropDefinition): void { this.props.push(prop); }
 
   // Checks if the provided dictionary (props) is can be accepted
   // based on the definitions of this Props instance. This means that

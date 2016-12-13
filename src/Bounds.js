@@ -23,7 +23,7 @@ class FullBound {
   // Creates a new isntance  of a transition. Note that when this transition
   // is created, it will also be created in the given machine. Of course start
   // and end should be names of states that are inside the given machine.
-  constructor(machine: Machine, start: string, end: string, actionType: string) {
+  constructor(machine: Machine, start: string, end: string, actionType: string): void {
     if (machine.states.has(start) && machine.states.has(end)) {
       this.start = start;
       this.end = end;
@@ -52,7 +52,7 @@ class DoubleBound {
   // Creates a new instance of this transition, without the actionType
   // that triggers it. Note state the start state and end state should
   // be elements of the given machine.
-  constructor(machine: Machine, start: string, end: string) {
+  constructor(machine: Machine, start: string, end: string): void {
     if (machine.states.has(start) && machine.states.has(end)) {
       this.machine = machine;
       this.start = start;
@@ -62,7 +62,7 @@ class DoubleBound {
 
   // Function to complete the builder pattern an combine an actionType
   // that triggers this transition with this transition itself.
-  on(trigger: string) {
+  on(trigger: string): FullBound {
     return new FullBound(this.machine, this.start, this.end, trigger);
   }
 
@@ -82,7 +82,7 @@ class SingleBound {
   // Creates a new instance of this SingleBound with given start state
   // end machine. Of course the start state should be inside the given
   // machine.
-  constructor(machine: Machine, start: string) {
+  constructor(machine: Machine, start: string): void {
     if (machine.states.has(start)) {
       this.machine = machine;
       this.start = start;
@@ -91,7 +91,7 @@ class SingleBound {
 
   // Returns a DoubleBound to bind an end state to the end of this
   // transition. Used to build transitions.
-  to(stop: string) { return new DoubleBound(this.machine, this.start, stop); }
+  to(stop: string): DoubleBound { return new DoubleBound(this.machine, this.start, stop); }
 
 }
 
