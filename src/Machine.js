@@ -9,12 +9,15 @@ class Machine {
 
   current: ?string;
   initial: ?string;
-  states: Map<string, State> = new Map();
-  structure: Map<string, Map<string, string>> = new Map();
-  middlewares: Array<Middleware> = [];
+  states: Map<string, State>;
+  structure: Map<string, Map<string, string>>;
+  middlewares: Array<Middleware>;
 
   constructor(states: Set<State>, middlewares: Array<Middleware> = []) {
     if (states.size < 1) { throw new Error('You need at least one state!'); }
+    this.states = new Map();
+    this.structure = new Map();
+    this.middlewares = [];
     states.forEach((state) => {
       if (!this.initial) this.initial = state.name;
       this.states.set(state.name, state);

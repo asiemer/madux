@@ -12,6 +12,8 @@ var Machine = function () {
   function Machine(states) {
     var _this = this;
 
+    var middlewares = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
     _classCallCheck(this, Machine);
 
     if (states.size < 1) {
@@ -19,11 +21,14 @@ var Machine = function () {
     }
     this.states = new Map();
     this.structure = new Map();
+    this.middlewares = [];
     states.forEach(function (state) {
       if (!_this.initial) _this.initial = state.name;
       _this.states.set(state.name, state);
       _this.structure.set(state.name, new Map());
     });
+    this.middlewares = middlewares;
+    this.middlewares.reverse();
   }
 
   _createClass(Machine, [{
@@ -85,18 +90,24 @@ var Machine = function () {
   }, {
     key: 'process',
     value: function process(action) {
-      var transition = action.type;
-      if (!this.current) {
-        throw new Error('This machine is not started!');
-      }
-      var maps = this.structure.get(this.current);
-      if (maps) {
-        var destination = maps.get(transition);
-        if (destination) this.current = destination;
-        if (!destination) throw new Error('No destination found!');
-      } else {
-        throw new Error('No map found, fatal!');
-      }
+      var _this2 = this;
+
+      this.middlewares.reduce(function (d, f) {
+        return f(d);
+      }, function (act) {
+        var transition = act.type;
+        if (!_this2.current) {
+          throw new Error('This machine is not started!');
+        }
+        var maps = _this2.structure.get(_this2.current);
+        if (maps) {
+          var destination = maps.get(transition);
+          if (destination) _this2.current = destination;
+          if (!destination) throw new Error('No destination found!');
+        } else {
+          throw new Error('No map found, fatal!');
+        }
+      })(action);
     }
   }]);
 

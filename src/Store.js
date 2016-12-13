@@ -11,8 +11,8 @@ import type { Action } from './Types';
 class Store {
 
   machine: Machine;
-  listeners: Array<(prv: ?State, act: Action, nxt: ?State) => void> = [];
-  nextListeners: Array<(prv: ?State, act: Action, nxt: ?State) => void> = [];
+  listeners: Array<(prv: ?State, act: Action, nxt: ?State) => void>;
+  nextListeners: Array<(prv: ?State, act: Action, nxt: ?State) => void>;
 
   // Create a new store with the predefined machine.
   constructor(machine: Machine) {

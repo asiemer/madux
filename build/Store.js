@@ -14,19 +14,31 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+// A default store for Madux.
+// TODO: Custom onInvalidAction handlers?
 var Store = function () {
-  function Store() {
+
+  // Create a new store with the predefined machine.
+  function Store(machine) {
     _classCallCheck(this, Store);
 
-    this.listeners = [];
-    this.machine = new _Machine.Machine(new Set());
+    this.machine = machine;
+    this.machine.start();
   }
 
-  // Check if the action can be dispatched and do so.
-  // If it is not possible, call invalidAction.
+  // Gets the state instance of the machine.
 
 
   _createClass(Store, [{
+    key: 'getState',
+    value: function getState() {
+      this.machine.getCurrentState();
+    }
+
+    // Check if the action can be dispatched and do so.
+    // If it is not possible, call invalidAction.
+
+  }, {
     key: 'dispatch',
     value: function dispatch(action) {
       if (this.machine.canProcess(action)) {
@@ -35,6 +47,18 @@ var Store = function () {
         this.callListeners(_prv, action, this.machine.getCurrentState());
       } else {
         this.invalidAction(action);
+      }
+      return action;
+    }
+
+    // Mutates the listeners of this store so there are no
+    // conflicts when they are updates while dispatching.
+
+  }, {
+    key: 'mutateListeners',
+    value: function mutateListeners() {
+      if (this.nextListeners === this.listeners) {
+        this.nextListeners = this.listeners.slice();
       }
     }
 
@@ -57,13 +81,12 @@ var Store = function () {
     value: function subscribe(func) {
       var _this = this;
 
-      var isSubscribed = true;
-      this.listeners.push(func);
+      this.mutateListeners();
+      this.nextListeners.push(func);
       return function () {
-        if (!isSubscribed) return;
-        isSubscribed = false;
-        var index = _this.listeners.indexOf(func);
-        _this.listeners.splice(index, 1);
+        _this.mutateListeners();
+        var index = _this.nextListeners.indexOf(func);
+        _this.nextListeners.splice(index, 1);
       };
     }
 
@@ -74,7 +97,7 @@ var Store = function () {
     key: 'invalidAction',
     value: function invalidAction(action) {
       var current = this.machine.current || 'null';
-      _winston2.default.error('Invalid action ' + action.type + ' in ' + current + '.');
+      _winston2.default.warn('Invalid action ' + action.type + ' in ' + current + '.');
     }
   }]);
 
