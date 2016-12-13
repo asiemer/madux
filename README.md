@@ -7,6 +7,10 @@ Redux is great, but it is not a solution for every project. When it comes down t
 
 Although it uses a lot of strategies that are used in [Redux](), it requires you to think somewhat different about the state of your project. For a simple hands-on tutorial, take a look at the docs.
 
+<img src="https://img.shields.io/badge/status-development-16a085.svg">
+<img src="https://img.shields.io/badge/npm-pending-blue.svg">
+<img src="https://img.shields.io/badge/build-pending-orange.svg">
+
 ### Experience
 
 I have seen a lot of developers forcing themselves to work with libraries like [redux](). However, as the creators wrote themselves, you [might not need it](). It is important to be constantly thinking about what you are doing and not just use libraries because other developers are using them.
