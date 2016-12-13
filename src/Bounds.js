@@ -16,6 +16,7 @@ class FullBound {
       this.stop = stop;
       this.trigger = trigger;
       this.machine = machine;
+      machine.addTransition(start, stop, trigger);
     } else { throw new Error('Invalid states for machine!'); }
   }
 

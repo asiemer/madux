@@ -59,6 +59,10 @@ describe('Bounds', () => {
     expect(double.stop).to.equal(state2.name);
     expect(double.trigger).to.equal(transition);
     expect(double.machine).to.equal(machine);
+    const maps = machine.structure.get(state1.name);
+    expect(!!maps).to.equal(true);
+    if (maps) { expect(maps.has(transition)).to.equal(true); }
+    if (maps) { expect(maps.get(transition)).to.equal(state2.name); }
   });
 
   it('should create propper FullBound', () => {
@@ -68,6 +72,10 @@ describe('Bounds', () => {
     expect(double.stop).to.equal(state2.name);
     expect(double.trigger).to.equal(transition);
     expect(double.machine).to.equal(machine);
+    const maps = machine.structure.get(state1.name);
+    expect(!!maps).to.equal(true);
+    if (maps) { expect(maps.has(transition)).to.equal(true); }
+    if (maps) { expect(maps.get(transition)).to.equal(state2.name); }
   });
 
   it('should create invalid FullBound should fail on first', () => {
