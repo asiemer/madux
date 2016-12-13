@@ -48,8 +48,8 @@ class Machine {
     const maps = this.structure.get(this.current);
     if (maps) {
       const destination = maps.get(transition);
-      if (destination) return destination;
-      throw new Error('No destination found!');
+      if (destination) this.current = destination;
+      if (!destination) throw new Error('No destination found!');
     } else { throw new Error('No map found, fatal!'); }
   }
 
