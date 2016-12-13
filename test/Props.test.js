@@ -46,4 +46,18 @@ describe('Props', () => {
     const props = { room: 5, companion: 'James' };
     expect(defs.validate(props)).to.equal(false);
   });
+
+  it('should reject only optional props with add', () => {
+    const defs = new Props([roomDefinition, companionDefinition]);
+    defs.addProp(streetDefinition);
+    const props = { companion: 'James' };
+    expect(defs.validate(props)).to.equal(false);
+  });
+
+  it('should reject partial required parameters with add', () => {
+    const defs = new Props([roomDefinition, companionDefinition]);
+    defs.addProp(streetDefinition);
+    const props = { room: 5, companion: 'James' };
+    expect(defs.validate(props)).to.equal(false);
+  });
 });

@@ -6,9 +6,7 @@ import type { Prop, PropDefinition } from './Types';
 class Props {
 
   props: Array<PropDefinition>;
-
   constructor(props: Array<PropDefinition>) { this.props = props; }
-
   addProp(prop: PropDefinition) { this.props.push(prop); }
 
   validate(props: Prop): boolean {
