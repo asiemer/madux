@@ -56,6 +56,37 @@ var Machine = function () {
     value: function isStarted() {
       return !!this.current;
     }
+  }, {
+    key: 'addTransition',
+    value: function addTransition(start, stop, transition) {
+      if (this.structure.has(start) && this.structure.has(stop)) {
+        var maps = this.structure.get(start);
+        var newMap = new Map();
+        newMap.set(transition, stop);
+        if (maps) {
+          maps.set(transition, stop);
+        } else {
+          this.structure.set(start, newMap);
+        }
+      } else {
+        throw new Error('Invalid transition for machine!');
+      }
+    }
+  }, {
+    key: 'process',
+    value: function process(transition) {
+      if (!this.current) {
+        throw new Error('This machine is not started!');
+      }
+      var maps = this.structure.get(this.current);
+      if (maps) {
+        var destination = maps.get(transition);
+        if (destination) this.current = destination;
+        if (!destination) throw new Error('No destination found!');
+      } else {
+        throw new Error('No map found, fatal!');
+      }
+    }
   }]);
 
   return Machine;
