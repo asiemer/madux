@@ -52,7 +52,7 @@ If you would like to contribute, you can by completing one of the following task
 - [x] Test Types
 - [x] Test Props
 - [x] Test State
-- [ ] Test Store
+- [x] Test Store
 - [ ] Test Madux
 - [x] Test Bounds
 - [x] Test Machine
