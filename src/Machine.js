@@ -48,6 +48,7 @@ class Machine {
     } else { throw new Error('Invalid transition for machine!'); }
   }
 
+  // TODO: Also check state props...
   canProcess(action: Action): boolean {
     return !!action && !!this.current;
   }
