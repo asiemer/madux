@@ -34,6 +34,14 @@ describe('Props', () => {
     expect(double.machine).to.equal(machine);
   });
 
+  it('should create propper DoubleBound', () => {
+    const machine = new Machine([state1, state2, state3]);
+    const double = new SingleBound(machine, state1.name).to(state2.name);
+    expect(double.start).to.equal(state1.name);
+    expect(double.stop).to.equal(state2.name);
+    expect(double.machine).to.equal(machine);
+  });
+
   it('should create invalid DoubleBound should fail on first', () => {
     const machine = new Machine([state1, state2]);
     expect(() => new DoubleBound(machine, state3.name, state1.name)).to.throw();
@@ -47,6 +55,15 @@ describe('Props', () => {
   it('should create propper FullBound', () => {
     const machine = new Machine([state1, state2, state3]);
     const double = new FullBound(machine, state1.name, state2.name, transition);
+    expect(double.start).to.equal(state1.name);
+    expect(double.stop).to.equal(state2.name);
+    expect(double.trigger).to.equal(transition);
+    expect(double.machine).to.equal(machine);
+  });
+
+  it('should create propper FullBound', () => {
+    const machine = new Machine([state1, state2, state3]);
+    const double = new DoubleBound(machine, state1.name, state2.name).on(transition);
     expect(double.start).to.equal(state1.name);
     expect(double.stop).to.equal(state2.name);
     expect(double.trigger).to.equal(transition);
