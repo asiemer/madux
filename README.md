@@ -1,7 +1,9 @@
 
 # <a href="http://imgur.com/lrRjfK7"><img src="http://i.imgur.com/lrRjfK7.png?1" title="madux" width="250" /></a>
 
-A predictable state container based on [Redux'](https://github.com/reactjs/redux) ideas with build-in state machine.
+A predictable state container based on the ideas of [Redux](https://github.com/reactjs/redux) with a state machine.
+
+***Do not install this module yet. We are working on this project and is not yet ready for production. If you are interested, take a look at the Github repo for updates. It should be ready for production in the last weeks of 2016.***
 
 [Redux](https://github.com/reactjs/redux) is great, but not a solution for every project. When it comes down to creating less complex user interfaces, you probably do not need [Redux](https://github.com/reactjs/redux) at all. When the user interface is not that complex, you might want to think more about it as an advanced predefined state machine. That's where [Madux](https://github.com/Jense5/madux) kicks in.
 
