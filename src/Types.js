@@ -7,3 +7,8 @@ export type PropDefinition = {
 };
 
 export type Prop = Object;
+
+export type Action = {
+  type: string;
+  params: Object;
+};

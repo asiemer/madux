@@ -3,6 +3,7 @@
 
 import { State } from './State';
 import { SingleBound } from './Bounds';
+import type { Action } from './Types';
 
 class Machine {
 
@@ -43,7 +44,16 @@ class Machine {
     } else { throw new Error('Invalid transition for machine!'); }
   }
 
-  process(transition: string) {
+  canProcess(action: Action): boolean {
+    return !!action && !!this.current;
+  }
+
+  getCurrentState(): ?State {
+    return this.current ? this.states.get(this.current) : null;
+  }
+
+  process(action: Action) {
+    const transition = action.type;
     if (!this.current) { throw new Error('This machine is not started!'); }
     const maps = this.structure.get(this.current);
     if (maps) {

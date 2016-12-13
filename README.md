@@ -1,5 +1,5 @@
 
-# <img src="https://raw.githubusercontent.com/Jense5/states/master/logo/madux.png?token=AFuPa__IRVUtR1O2SsaOzd9GlhxL6V9sks5YWVn5wA%3D%3D" width="250" />
+# <a href="http://imgur.com/lrRjfK7"><img src="http://i.imgur.com/lrRjfK7.png?1" title="madux" width="250" /></a>
 
 A predictable state container based on [Redux]() ideas with build-in state machine.
 
