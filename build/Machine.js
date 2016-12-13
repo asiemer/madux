@@ -73,8 +73,19 @@ var Machine = function () {
       }
     }
   }, {
+    key: 'canProcess',
+    value: function canProcess(action) {
+      return !!action && !!this.current;
+    }
+  }, {
+    key: 'getCurrentState',
+    value: function getCurrentState() {
+      return this.current ? this.states.get(this.current) : null;
+    }
+  }, {
     key: 'process',
-    value: function process(transition) {
+    value: function process(action) {
+      var transition = action.type;
       if (!this.current) {
         throw new Error('This machine is not started!');
       }

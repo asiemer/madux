@@ -2,7 +2,7 @@
   "name": "madux",
   "version": "0.0.1",
   "description": "Predictable state container with finite state machine",
-  "main": "build/States.js",
+  "main": "build/Madux.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register",
     "build": "babel src -d build"
