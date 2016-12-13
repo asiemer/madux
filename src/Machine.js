@@ -12,6 +12,8 @@ class Machine {
 
   constructor(states: Array<State>) {
     if (states.length < 1) { throw new Error('You need at least one state!'); }
+    this.states = new Map();
+    this.structure = new Map();
     states.forEach((state) => {
       if (!this.initial) this.initial = state.name;
       this.states.set(state.name, state);
