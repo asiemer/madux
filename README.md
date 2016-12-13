@@ -45,6 +45,22 @@ store.dispatch({ type: 'LEAVE' });
 
 ```
 
+### Development
+
+If you would like to contribute, you can by completing one of the following tasks. Ones these are finished, we can start the sample project. When this all is finished, we can finally write the guide and go public.
+
+- [ ] Test Types
+- [ ] Test Props
+- [ ] Test State
+- [ ] Test Store
+- [ ] Test Madux
+- [ ] Test Bounds
+- [ ] Test Machine
+- [ ] Update readme and version
+- [ ] Publish alpha version
+
+Once you have cloned the repository, run `yarn install` to install all the dependencies. To build a new build folder, run `yarn build`. To run the test, use the `yarn test` command in the root of the project.
+
 ### License
 
 Licensed under MIT
