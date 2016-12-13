@@ -5,7 +5,7 @@ A predictable state container based on the ideas of [Redux](https://github.com/r
 
 ***Do not install this module yet. We are working on this project and it is not yet ready for production. If you are interested, take a look at the Github repo for updates. It should be ready for production at the end of 2016.***
 
-[Redux](https://github.com/reactjs/redux) is great, but not a solution for every project. When it comes down to creating less complex user interfaces, you probably do not need [Redux](https://github.com/reactjs/redux) at all. When the user interface is not that complex, you might want to think more about it as an advanced predefined state machine. That's where [Madux](https://github.com/Jense5/madux) kicks in.
+[Redux](https://github.com/reactjs/redux) is great, but not the solution for every project. When it comes down to creating less complex user interfaces, you might not need [Redux](https://github.com/reactjs/redux) at all. When the user interface is not that complex, you might want to think more about it as an advanced predefined state machine. This will become clear in the [quickstart](https://jense5.gitbooks.io/madux/content/). That's where [Madux](https://github.com/Jense5/madux) kicks in.
 
 Although it uses a lot of strategies from [Redux](https://github.com/reactjs/redux), it requires you to think somewhat different about the state of your project. For a simple hands-on tutorial, take a look at the [docs](https://jense5.gitbooks.io/madux/content/).
 
