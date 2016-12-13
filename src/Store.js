@@ -6,24 +6,40 @@ import { State } from './State';
 import { Machine } from './Machine';
 import type { Action } from './Types';
 
+// A default store for Madux.
+// TODO: Custom onInvalidAction handlers?
 class Store {
 
   machine: Machine;
-  listeners: Array<(prv: ?State, act: Action, nxt: ?State) => void>;
+  listeners: Array<(prv: ?State, act: Action, nxt: ?State) => void> = [];
+  nextListeners: Array<(prv: ?State, act: Action, nxt: ?State) => void> = [];
 
-  constructor() {
-    this.listeners = [];
-    this.machine = new Machine(new Set());
+  // Create a new store with the predefined machine.
+  constructor(machine: Machine) {
+    this.machine = machine;
+    this.machine.start();
   }
+
+  // Gets the state instance of the machine.
+  getState(): ?State { this.machine.getCurrentState(); }
 
   // Check if the action can be dispatched and do so.
   // If it is not possible, call invalidAction.
-  dispatch(action: Action): void {
+  dispatch(action: Action): Action {
     if (this.machine.canProcess(action)) {
       const prv = this.machine.getCurrentState();
       this.machine.process(action);
       this.callListeners(prv, action, this.machine.getCurrentState());
     } else { this.invalidAction(action); }
+    return action;
+  }
+
+  // Mutates the listeners of this store so there are no
+  // conflicts when they are updates while dispatching.
+  mutateListeners() {
+    if (this.nextListeners === this.listeners) {
+      this.nextListeners = this.listeners.slice();
+    }
   }
 
   // Calls every listener of this store with correct arguments.
@@ -37,13 +53,12 @@ class Store {
   // The subscribe function will return an unsubscribe function.
   // The subscribed function is stored in the listeners list.
   subscribe(func: (prv: ?State, act: Action, nxt: ?State) => void) {
-    let isSubscribed = true;
-    this.listeners.push(func);
+    this.mutateListeners();
+    this.nextListeners.push(func);
     return () => {
-      if (!isSubscribed) return;
-      isSubscribed = false;
-      const index = this.listeners.indexOf(func);
-      this.listeners.splice(index, 1);
+      this.mutateListeners();
+      const index = this.nextListeners.indexOf(func);
+      this.nextListeners.splice(index, 1);
     };
   }
 
@@ -51,7 +66,7 @@ class Store {
   // executed in the current state.
   invalidAction(action: Action): void {
     const current = this.machine.current || 'null';
-    winston.error(`Invalid action ${action.type} in ${current}.`);
+    winston.warn(`Invalid action ${action.type} in ${current}.`);
   }
 
 }
