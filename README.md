@@ -10,8 +10,9 @@ A predictable state container based on the ideas of [Redux](https://github.com/r
 Although it uses a lot of strategies from [Redux](https://github.com/reactjs/redux), it requires you to think somewhat different about the state of your project. The interaction with this state will be somewhat different. For a simple hands-on tutorial, take a look at the [docs](https://jense5.gitbooks.io/madux/content/).
 
 <img src="https://img.shields.io/badge/status-development-16a085.svg">
-<img src="https://img.shields.io/badge/npm-pending-blue.svg">
-<img src="https://img.shields.io/badge/build-pending-orange.svg">
+<img src="https://travis-ci.org/Jense5/madux.svg?branch=master">
+<img src="https://img.shields.io/npm/v/madux.svg">
+<img src="https://img.shields.io/npm/l/madux.svg">
 
 ### Experience
 
@@ -53,11 +54,11 @@ If you would like to contribute, you can by completing one of the following task
 - [x] Test Props
 - [x] Test State
 - [x] Test Store
-- [ ] Test Madux
+- [x] Test Madux
 - [x] Test Bounds
 - [x] Test Machine
-- [ ] Final Flow and Eslint revision
-- [ ] Update readme and version
+- [x] Final Flow and Eslint revision
+- [x] Update readme and version
 - [ ] Go open source
 - [ ] Add travis support
 - [ ] Publish alpha version
