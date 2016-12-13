@@ -26,9 +26,9 @@ class Store {
   // Check if the action can be dispatched and do so.
   // If it is not possible, call invalidAction.
   dispatch(action: Action): Action {
-    if (this.machine.canProcess(action)) {
+    if (this.machine.canDispatch(action)) {
       const prv = this.machine.getCurrentState();
-      this.machine.process(action);
+      this.machine.dispatch(action);
       this.callListeners(prv, action, this.machine.getCurrentState());
     } else { this.invalidAction(action); }
     return action;
