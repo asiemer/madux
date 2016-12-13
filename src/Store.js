@@ -1,16 +1,18 @@
 
 // @flow
 
-import winston from 'winston';
 import { State } from './State';
 import { Machine } from './Machine';
 import type { Action } from './Types';
 
 // A default store for Madux.
-// TODO: Custom onInvalidAction handlers?
 class Store {
 
+  // The machine of this store.
   machine: Machine;
+
+  // List of subscribers. We have two lists in case dispatch() is called
+  // when a listener is added.
   listeners: Array<(prv: ?State, act: Action, nxt: ?State) => void>;
   nextListeners: Array<(prv: ?State, act: Action, nxt: ?State) => void>;
 
@@ -18,10 +20,12 @@ class Store {
   constructor(machine: Machine) {
     this.machine = machine;
     this.machine.start();
+    this.listeners = [];
+    this.nextListeners = this.listeners;
   }
 
   // Gets the state instance of the machine.
-  getState(): ?State { this.machine.getCurrentState(); }
+  getState(): ?State { return this.machine.getCurrentState(); }
 
   // Check if the action can be dispatched and do so.
   // If it is not possible, call invalidAction.
@@ -30,7 +34,7 @@ class Store {
       const prv = this.machine.getCurrentState();
       this.machine.dispatch(action);
       this.callListeners(prv, action, this.machine.getCurrentState());
-    } else { this.invalidAction(action); }
+    } // OPTIONAL: else { this.invalidAction(action); }
     return action;
   }
 
@@ -44,8 +48,9 @@ class Store {
 
   // Calls every listener of this store with correct arguments.
   callListeners(prv: ?State, act: Action, nxt: ?State) {
-    for (let i = 0; i < this.listeners.length; i += 1) {
-      const listener = this.listeners[i];
+    const listeners = this.listeners = this.nextListeners;
+    for (let i = 0; i < listeners.length; i += 1) {
+      const listener = listeners[i];
       listener(prv, act, nxt);
     }
   }
@@ -64,10 +69,11 @@ class Store {
 
   // Will be called whenever we receive an action that can not be
   // executed in the current state.
-  invalidAction(action: Action): void {
-    const current = this.machine.current || 'null';
-    winston.warn(`Invalid action ${action.type} in ${current}.`);
-  }
+  // OPTIONAL
+  // invalidAction(action: Action): void {
+  //   const current = this.machine.current || 'null';
+  //   winston.warn(`Invalid action ${action.type} in ${current}.`);
+  // }
 
 }
 

@@ -2,37 +2,39 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _winston = require('winston');
-
-var _winston2 = _interopRequireDefault(_winston);
-
 var _State = require('./State');
 
 var _Machine = require('./Machine');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 // A default store for Madux.
-// TODO: Custom onInvalidAction handlers?
 var Store = function () {
 
   // Create a new store with the predefined machine.
+
+
+  // List of subscribers. We have two lists in case dispatch() is called
+  // when a listener is added.
   function Store(machine) {
     _classCallCheck(this, Store);
 
     this.machine = machine;
     this.machine.start();
+    this.listeners = [];
+    this.nextListeners = this.listeners;
   }
 
   // Gets the state instance of the machine.
 
 
+  // The machine of this store.
+
+
   _createClass(Store, [{
     key: 'getState',
     value: function getState() {
-      this.machine.getCurrentState();
+      return this.machine.getCurrentState();
     }
 
     // Check if the action can be dispatched and do so.
@@ -45,9 +47,7 @@ var Store = function () {
         var _prv = this.machine.getCurrentState();
         this.machine.dispatch(action);
         this.callListeners(_prv, action, this.machine.getCurrentState());
-      } else {
-        this.invalidAction(action);
-      }
+      } // OPTIONAL: else { this.invalidAction(action); }
       return action;
     }
 
@@ -67,8 +67,9 @@ var Store = function () {
   }, {
     key: 'callListeners',
     value: function callListeners(prv, act, nxt) {
-      for (var i = 0; i < this.listeners.length; i += 1) {
-        var listener = this.listeners[i];
+      var listeners = this.listeners = this.nextListeners;
+      for (var i = 0; i < listeners.length; i += 1) {
+        var listener = listeners[i];
         listener(prv, act, nxt);
       }
     }
@@ -92,13 +93,12 @@ var Store = function () {
 
     // Will be called whenever we receive an action that can not be
     // executed in the current state.
+    // OPTIONAL
+    // invalidAction(action: Action): void {
+    //   const current = this.machine.current || 'null';
+    //   winston.warn(`Invalid action ${action.type} in ${current}.`);
+    // }
 
-  }, {
-    key: 'invalidAction',
-    value: function invalidAction(action) {
-      var current = this.machine.current || 'null';
-      _winston2.default.warn('Invalid action ' + action.type + ' in ' + current + '.');
-    }
   }]);
 
   return Store;
