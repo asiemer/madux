@@ -1,9 +1,9 @@
 
 # <a href='http://imgur.com/lrRjfK7'><img src='http://i.imgur.com/lrRjfK7.png?1' title='madux' height='60' /></a>
 
-A predictable state container with finite state machine JS tools.
+A predictable state container with finite state machine for JS tools.
 
-[Madux](https://github.com/Jense5/madux) is a predictable state container for command line tools written in JS. It can be seen as an alternative to [Redux](https://github.com/reactjs/redux), although it requires a different way of thinking about the state of the app. In Madux, the state of the app represents as a [state machine](https://en.wikipedia.org/wiki/Finite-state_machine).
+[Madux](https://github.com/Jense5/madux) is a predictable state container for command line tools written in JS. It can be seen as an alternative to [Redux](https://github.com/reactjs/redux), although it requires a different way of thinking about the state of the app. In Madux, the state of the app is represented as a [state machine](https://en.wikipedia.org/wiki/Finite-state_machine).
 
 Although Madux can be used on its own, it's strongly advised to use it in combination with [madux-bind](https://github.com/Jense5/madux-bind). It makes it possible to build a JS app in a declarative way which makes it easier to create a consistent and bug-free application. You can find a hands-on tutorial [here](https://jense5.gitbooks.io/madux/content/).
 
@@ -14,7 +14,7 @@ Although Madux can be used on its own, it's strongly advised to use it in combin
 
 ### Experience
 
-Make sure you understand the fundamentals of state machines, as well as how a predictable state container works, before deciding if you should use madux and madux-bind. It has helped me a lot in the past, although it's not the best solution for every project. The [documentation](https://jense5.gitbooks.io/madux/content/) should make clear if madux is a good option for your app.
+Make sure you understand the fundamentals of state machines, as well as how a predictable state container works, before deciding if you should use madux and madux-bind. It has helped me a lot in the past, although it's not the best solution for every project. The [documentation](https://jense5.gitbooks.io/madux/content/) should make clear if madux is a good option for your app or not.
 
 ### Basic example
 
