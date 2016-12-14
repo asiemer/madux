@@ -10,4 +10,5 @@ exports.createStore = function (machine) {
   return new _Store.Store(machine);
 };
 
+exports.Machine = _Machine.Machine;
 exports.State = _State.State;
