@@ -1,6 +1,6 @@
 {
   "name": "madux",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Predictable state container with finite state machine",
   "main": "build/Madux.js",
   "scripts": {
