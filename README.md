@@ -1,13 +1,11 @@
 
-# <a href="http://imgur.com/lrRjfK7"><img src="http://i.imgur.com/lrRjfK7.png?1" title="madux" width="250" /></a>
+# <a href='http://imgur.com/lrRjfK7'><img src='http://i.imgur.com/lrRjfK7.png?1' title='madux' height='60' /></a>
 
-A predictable state container based on the ideas of [Redux](https://github.com/reactjs/redux) with a state machine.
+A predictable state container with finite state machine JS tools.
 
-> ***Do not install this module yet. We are working on this project and it is not yet ready for production. If you are interested, take a look at the Github repo for updates. It should be ready for production at the end of 2016. Links in this readme might be broken until the first release.***
+[Madux](https://github.com/Jense5/madux) is a predictable state container for command line tools written in JS. It can be seen as an alternative to [Redux](https://github.com/reactjs/redux), although it requires a different way of thinking about the state of the app. In Madux, the state of the app represents as a [state machine](https://en.wikipedia.org/wiki/Finite-state_machine).
 
-[Redux](https://github.com/reactjs/redux) is great, but not the solution for every project. When it comes down to creating less complex user interfaces, you might not need [Redux](https://github.com/reactjs/redux) at all. When the user interface is not that complex, you might want to think more about it as an advanced predefined state machine. This will become clear in the [quickstart](https://jense5.gitbooks.io/madux/content/). That's where [Madux](https://github.com/Jense5/madux) kicks in.
-
-Although it uses a lot of strategies from [Redux](https://github.com/reactjs/redux), it requires you to think somewhat different about the state of your project. The interaction with this state will be somewhat different. For a simple hands-on tutorial, take a look at the [docs](https://jense5.gitbooks.io/madux/content/).
+Although Madux can be used on its own, it's strongly advised to use it in combination with [madux-bind](https://github.com/Jense5/madux-bind). It makes it possible to build a JS app in a declarative way which makes it easier to create a consistent and bug-free application. You can find a hands-on tutorial [here](https://jense5.gitbooks.io/madux/content/).
 
 <img src="https://img.shields.io/badge/status-development-16a085.svg">
 <img src="https://travis-ci.org/Jense5/madux.svg?branch=master">
@@ -16,36 +14,47 @@ Although it uses a lot of strategies from [Redux](https://github.com/reactjs/red
 
 ### Experience
 
-I have seen a lot of developers forcing themselves to work with libraries like [Redux](https://github.com/reactjs/redux). As the creators wrote themselves, you [might not need it](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367#.kdgzqq3ox). Constantly be thinking about what you are doing is important. Don't use libraries only because other developers are using them.
-
-An example of a small tool I wrote is [fb-term-chat](https://github.com/Jense5/fb-term-chat.git). A small command line tool that uses [Madux](https://github.com/Jense5/madux) to keep a consistent state and makes it easy to maintain.
+Make sure you understand the fundamentals of state machines, as well as how a predictable state container works, before deciding if you should use madux and madux-bind. It has helped me a lot in the past, although it's not the best solution for every project. The [documentation](https://jense5.gitbooks.io/madux/content/) should make clear if madux is a good option for your app.
 
 ### Basic example
 
-You can install that latest stable version within your project with npm or yarn. [Madux](https://github.com/Jense5/madux) looks a lot like [Redux](https://github.com/reactjs/redux) in this basic example, but will differ a lot when we [expand this example to a real life command line application](https://github.com/Jense5/fb-term-chat.git). For all the details, check the [documentation](https://jense5.gitbooks.io/madux/content/).
+You can install that latest stable version within your project with npm or yarn. Madux looks a lot like Redux in this basic example, but will differ more when we expand it to a [real cli tool](https://jense5.gitbooks.io/madux/content/). For more details, check the [docs](https://jense5.gitbooks.io/madux/content/).
 
 ```
 $ yarn add madux
 ```
 
 ```js
-import { createStore, Machine } from 'madux';
+// Import madux
+import { createStore, createMachine, State } from 'madux';
 
-const machine = new Machine('LOBBY', 'ROOM');
-machine.from('LOBBY').to('ROOM').on('ENTER');
-machine.from('ROOM').to('LOBBY').on('LEAVE');
+// Create some states.
+const LOBBY = new State('LOBBY');
+const ROOM = new State('ROOM');
 
+// Create some Actions.
+const ENTER = 'ENTER';
+const LEAVE = 'LEAVE';
+
+// Create a machine.
+const machine = createMachine([LOBBY, ROOM]);
+machine.from(LOBBY).to(ROOM).on(ENTER);
+machine.from(ROOM).to(LOBBY).on(LEAVE);
+
+// Create a store.
 const store = createStore(machine);
 
+// Subscribe to the store.
 store.subscribe((prev, act, next) => {
-  console.log(`Welcome to ${next}`);
+  console.log(`Welcome to the ${next.name}.`);
 });
 
-store.dispatch({ type: 'ENTER' });
-store.dispatch({ type: 'LEAVE' });
+// Dispatch some actions!
+store.dispatch({ type: ENTER }); // Console: `Welcome to the ROOM.`
+store.dispatch({ type: LEAVE }); // Console: `Welcome to the LOBBY.`
 
 ```
 
 ### License
 
-Licensed under MIT
+Licensed under **MIT**
