@@ -12,3 +12,4 @@ exports.createStore = function (machine) {
 
 exports.Machine = _Machine.Machine;
 exports.State = _State.State;
+exports.Store = _Store.Store;
