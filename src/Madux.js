@@ -9,3 +9,4 @@ exports.createStore = (machine: Machine) => new Store(machine);
 
 exports.Machine = Machine;
 exports.State = State;
+exports.Store = Store;
