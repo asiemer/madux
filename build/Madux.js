@@ -1,14 +1,13 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _Store = require('./Store');
+
+var _State = require('./State');
 
 var _Machine = require('./Machine');
 
-// Creates a new store.
-exports.default = function (machine) {
+exports.createStore = function (machine) {
   return new _Store.Store(machine);
 };
+
+exports.State = _State.State;
