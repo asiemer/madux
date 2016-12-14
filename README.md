@@ -3,7 +3,7 @@
 
 A predictable state container based on the ideas of [Redux](https://github.com/reactjs/redux) with a state machine.
 
-***Do not install this module yet. We are working on this project and it is not yet ready for production. If you are interested, take a look at the Github repo for updates. It should be ready for production at the end of 2016.***
+> ***Do not install this module yet. We are working on this project and it is not yet ready for production. If you are interested, take a look at the Github repo for updates. It should be ready for production at the end of 2016. Links in this readme might be broken until the first release.***
 
 [Redux](https://github.com/reactjs/redux) is great, but not the solution for every project. When it comes down to creating less complex user interfaces, you might not need [Redux](https://github.com/reactjs/redux) at all. When the user interface is not that complex, you might want to think more about it as an advanced predefined state machine. This will become clear in the [quickstart](https://jense5.gitbooks.io/madux/content/). That's where [Madux](https://github.com/Jense5/madux) kicks in.
 
@@ -45,25 +45,6 @@ store.dispatch({ type: 'ENTER' });
 store.dispatch({ type: 'LEAVE' });
 
 ```
-
-### Development
-
-If you would like to contribute, you can by completing one of the following tasks. Ones these are finished, we can start the sample project. When this all is finished, we can finally write the guide and go public.
-
-- [x] Test Types
-- [x] Test Props
-- [x] Test State
-- [x] Test Store
-- [x] Test Madux
-- [x] Test Bounds
-- [x] Test Machine
-- [x] Final Flow and Eslint revision
-- [x] Update readme and version
-- [ ] Go open source
-- [ ] Add travis support
-- [ ] Publish alpha version
-
-Once you have cloned the repository, run `yarn install` to install all the dependencies. To build a new build folder, run `yarn build`. To run the test, use the `yarn test` command in the root of the project.
 
 ### License
 
