@@ -1,5 +1,5 @@
 
-# <a href='http://imgur.com/lrRjfK7'><img src='http://i.imgur.com/lrRjfK7.png?1' title='madux' height='60' /></a>
+# <img src='https://raw.githubusercontent.com/Jense5/madux/master/logo/icon.repo.png' title='madux' height='60' />
 
 A predictable state container with finite state machine for JS tools.
 
