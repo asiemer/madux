@@ -3,7 +3,7 @@
 
 import { State } from './State';
 import { SingleBound } from './Bounds';
-import type { Action, Middleware, Dispatch } from './Types';
+import type { Action } from './Types';
 
 // Represents a state machine that will handle all the internal logic.
 class Machine {
@@ -23,25 +23,19 @@ class Machine {
   // it works like this: this.structure.get(start).get(actionType) = destination.
   structure: Map<string, Map<string, string>>;
 
-  // A list of middlewares that wrap around the dispatch function.
-  middlewares: Array<Middleware>;
-
   // Creates a new instance of a state machine with the given states and
   // middlewares. The first given state will be the initial state.
   // The list of middlewares will be wrapped around the dispatch function
   // in the order as they are provided. The created machine has no transitions.
-  constructor(states: Array<State>, middlewares: Array<Middleware> = []): void {
+  constructor(states: Array<State>): void {
     if (states.length < 1) { throw new Error('You need at least one state!'); }
     this.states = new Map();
     this.structure = new Map();
-    this.middlewares = [];
     states.forEach((state) => {
       if (!this.initial) this.initial = state.name;
       this.states.set(state.name, state);
       this.structure.set(state.name, new Map());
     });
-    this.middlewares = middlewares;
-    this.middlewares.reverse();
   }
 
   // Function that creates a SingleBound to start building a transition.
@@ -104,15 +98,13 @@ class Machine {
   // machine can not dispatch, it will ignore the input.
   dispatch(action: Action) {
     if (this.canDispatch(action)) {
-      this.middlewares.reduce((d: Dispatch, f: Middleware) => f(d), (act: Action) => {
-        if (!this.current) { throw new Error('This machine is not started!'); }
-        const maps = this.structure.get(this.current);
-        if (maps) {
-          const destination = maps.get(act.type);
-          if (destination) this.current = destination;
-          if (!destination) throw new Error('No destination found!');
-        } else { throw new Error('No map found, fatal!'); }
-      })(action);
+      if (!this.current) { throw new Error('This machine is not started!'); }
+      const maps = this.structure.get(this.current);
+      if (maps) {
+        const destination = maps.get(action.type);
+        if (destination) this.current = destination;
+        if (!destination) throw new Error('No destination found!');
+      } else { throw new Error('No map found, fatal!'); }
     }
   }
 

@@ -3,7 +3,7 @@
 
 import { State } from './State';
 import { Machine } from './Machine';
-import type { Action } from './Types';
+import type { Action, Middleware, Dispatch } from './Types';
 
 // A default store for Madux.
 class Store {
@@ -16,12 +16,17 @@ class Store {
   listeners: Array<(prv: ?State, act: Action, nxt: ?State) => void>;
   nextListeners: Array<(prv: ?State, act: Action, nxt: ?State) => void>;
 
+  // A list of middlewares that wrap around the dispatch function.
+  middlewares: Array<Middleware>;
+
   // Create a new store with the predefined machine.
-  constructor(machine: Machine) {
+  constructor(machine: Machine, middlewares: Array<Middleware> = []) {
     this.machine = machine;
     this.machine.start();
     this.listeners = [];
     this.nextListeners = this.listeners;
+    this.middlewares = middlewares;
+    this.middlewares.reverse();
   }
 
   // Gets the state instance of the machine.
@@ -29,13 +34,14 @@ class Store {
 
   // Check if the action can be dispatched and do so.
   // If it is not possible, call invalidAction.
-  dispatch(action: Action): Action {
-    if (this.machine.canDispatch(action)) {
-      const prv = this.machine.getCurrentState();
-      this.machine.dispatch(action);
-      this.callListeners(prv, action, this.machine.getCurrentState());
-    } // OPTIONAL: else { this.invalidAction(action); }
-    return action;
+  dispatch(action: Action) {
+    this.middlewares.reduce((d: Dispatch, f: Middleware) => f(d), (act: Action) => {
+      if (this.machine.canDispatch(act)) {
+        const prv = this.machine.getCurrentState();
+        this.machine.dispatch(act);
+        this.callListeners(prv, act, this.machine.getCurrentState());
+      } // OPTIONAL: else { this.invalidAction(act); }
+    })(action);
   }
 
   // Mutates the listeners of this store so there are no
