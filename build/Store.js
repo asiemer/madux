@@ -14,21 +14,28 @@ var Store = function () {
   // Create a new store with the predefined machine.
 
 
-  // List of subscribers. We have two lists in case dispatch() is called
-  // when a listener is added.
+  // The machine of this store.
   function Store(machine) {
+    var middlewares = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
     _classCallCheck(this, Store);
 
     this.machine = machine;
     this.machine.start();
     this.listeners = [];
     this.nextListeners = this.listeners;
+    this.middlewares = middlewares;
+    this.middlewares.reverse();
   }
 
   // Gets the state instance of the machine.
 
 
-  // The machine of this store.
+  // A list of middlewares that wrap around the dispatch function.
+
+
+  // List of subscribers. We have two lists in case dispatch() is called
+  // when a listener is added.
 
 
   _createClass(Store, [{
@@ -43,12 +50,17 @@ var Store = function () {
   }, {
     key: 'dispatch',
     value: function dispatch(action) {
-      if (this.machine.canDispatch(action)) {
-        var _prv = this.machine.getCurrentState();
-        this.machine.dispatch(action);
-        this.callListeners(_prv, action, this.machine.getCurrentState());
-      } // OPTIONAL: else { this.invalidAction(action); }
-      return action;
+      var _this = this;
+
+      this.middlewares.reduce(function (d, f) {
+        return f(d);
+      }, function (act) {
+        if (_this.machine.canDispatch(act)) {
+          var _prv = _this.machine.getCurrentState();
+          _this.machine.dispatch(act);
+          _this.callListeners(_prv, act, _this.machine.getCurrentState());
+        } // OPTIONAL: else { this.invalidAction(act); }
+      })(action);
     }
 
     // Mutates the listeners of this store so there are no
@@ -80,14 +92,14 @@ var Store = function () {
   }, {
     key: 'subscribe',
     value: function subscribe(func) {
-      var _this = this;
+      var _this2 = this;
 
       this.mutateListeners();
       this.nextListeners.push(func);
       return function () {
-        _this.mutateListeners();
-        var index = _this.nextListeners.indexOf(func);
-        _this.nextListeners.splice(index, 1);
+        _this2.mutateListeners();
+        var index = _this2.nextListeners.indexOf(func);
+        _this2.nextListeners.splice(index, 1);
       };
     }
 

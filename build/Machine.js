@@ -17,16 +17,13 @@ var Machine = function () {
   // in the order as they are provided. The created machine has no transitions.
 
 
-  // The internal structure which represents the transitions. In general
-  // it works like this: this.structure.get(start).get(actionType) = destination.
+  // A map of all the states which maps the names to the states for
+  // O(1) lookup.
 
 
-  // The name of the initial state of the machine. This is the first state
-  // given to the constructor.
+  // The name of the current state of the machine, null if not started yet.
   function Machine(states) {
     var _this = this;
-
-    var middlewares = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
     _classCallCheck(this, Machine);
 
@@ -35,27 +32,22 @@ var Machine = function () {
     }
     this.states = new Map();
     this.structure = new Map();
-    this.middlewares = [];
     states.forEach(function (state) {
       if (!_this.initial) _this.initial = state.name;
       _this.states.set(state.name, state);
       _this.structure.set(state.name, new Map());
     });
-    this.middlewares = middlewares;
-    this.middlewares.reverse();
   }
 
   // Function that creates a SingleBound to start building a transition.
 
 
-  // A list of middlewares that wrap around the dispatch function.
+  // The internal structure which represents the transitions. In general
+  // it works like this: this.structure.get(start).get(actionType) = destination.
 
 
-  // A map of all the states which maps the names to the states for
-  // O(1) lookup.
-
-
-  // The name of the current state of the machine, null if not started yet.
+  // The name of the initial state of the machine. This is the first state
+  // given to the constructor.
 
 
   _createClass(Machine, [{
@@ -163,24 +155,18 @@ var Machine = function () {
   }, {
     key: 'dispatch',
     value: function dispatch(action) {
-      var _this2 = this;
-
       if (this.canDispatch(action)) {
-        this.middlewares.reduce(function (d, f) {
-          return f(d);
-        }, function (act) {
-          if (!_this2.current) {
-            throw new Error('This machine is not started!');
-          }
-          var maps = _this2.structure.get(_this2.current);
-          if (maps) {
-            var destination = maps.get(act.type);
-            if (destination) _this2.current = destination;
-            if (!destination) throw new Error('No destination found!');
-          } else {
-            throw new Error('No map found, fatal!');
-          }
-        })(action);
+        if (!this.current) {
+          throw new Error('This machine is not started!');
+        }
+        var maps = this.structure.get(this.current);
+        if (maps) {
+          var destination = maps.get(action.type);
+          if (destination) this.current = destination;
+          if (!destination) throw new Error('No destination found!');
+        } else {
+          throw new Error('No map found, fatal!');
+        }
       }
     }
   }]);
