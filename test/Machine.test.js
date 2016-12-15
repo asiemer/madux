@@ -4,7 +4,6 @@
 import chai from 'chai';
 import { State } from '../src/State';
 import { Machine } from '../src/Machine';
-import type { Action, Dispatch } from '../src/Types';
 
 const expect = chai.expect;
 
@@ -94,31 +93,5 @@ describe('Machine', () => {
     expect(machine.current).to.equal(state1.name);
     machine.dispatch(trans6);
     expect(machine.current).to.equal(state5.name);
-  });
-
-  it('work with middlewares', () => {
-    let count = 0;
-    const m1 = (next: Dispatch) => (action: Action) => {
-      count += 1;
-      next(action);
-    };
-    const m2 = (next: Dispatch) => (action: Action) => {
-      count += 2;
-      next(action);
-    };
-    const machine = new Machine([state1, state2, state3, state4], [m1, m2]);
-    machine.from(state1.name).to(state2.name).on(trans1.type);
-    machine.from(state2.name).to(state4.name).on(trans2.type);
-    machine.from(state4.name).to(state1.name).on(trans3.type);
-    machine.from(state1.name).to(state3.name).on(trans4.type);
-    machine.from(state3.name).to(state2.name).on(trans5.type);
-    machine.start();
-    machine.dispatch(trans1);
-    machine.dispatch(trans2);
-    machine.dispatch(trans3);
-    machine.dispatch(trans4);
-    machine.dispatch(trans5);
-    expect(machine.getCurrentState()).to.equal(state2);
-    expect(count).to.equal(15);
   });
 });

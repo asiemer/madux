@@ -5,6 +5,7 @@ import chai from 'chai';
 import { Store } from '../src/Store';
 import { State } from '../src/State';
 import { Machine } from '../src/Machine';
+import type { Action, Dispatch } from '../src/Types';
 
 const expect = chai.expect;
 
@@ -95,5 +96,31 @@ describe('Store', () => {
     expect(store.getState()).to.equal(state1);
     store.dispatch(trans6);
     expect(store.getState()).to.equal(state5);
+  });
+
+  it('should work with middlewares', () => {
+    let count = 0;
+    const m1 = (next: Dispatch) => (action: Action) => {
+      count += 1;
+      next(action);
+    };
+    const m2 = (next: Dispatch) => (action: Action) => {
+      count += 2;
+      next(action);
+    };
+    const machine = new Machine([state1, state2, state3, state4]);
+    machine.from(state1.name).to(state2.name).on(trans1.type);
+    machine.from(state2.name).to(state4.name).on(trans2.type);
+    machine.from(state4.name).to(state1.name).on(trans3.type);
+    machine.from(state1.name).to(state3.name).on(trans4.type);
+    machine.from(state3.name).to(state2.name).on(trans5.type);
+    const store = new Store(machine, [m1, m2]);
+    store.dispatch(trans1);
+    store.dispatch(trans2);
+    store.dispatch(trans3);
+    store.dispatch(trans4);
+    store.dispatch(trans5);
+    expect(store.getState()).to.equal(state2);
+    expect(count).to.equal(15);
   });
 });
