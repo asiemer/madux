@@ -52,8 +52,8 @@ var Machine = function () {
 
   _createClass(Machine, [{
     key: 'from',
-    value: function from(name) {
-      return new _Bounds.SingleBound(this, name);
+    value: function from(state) {
+      return new _Bounds.SingleBound(this, state);
     }
 
     // Checks if this machine has the given state (with the same name).
@@ -111,14 +111,14 @@ var Machine = function () {
   }, {
     key: 'addTransition',
     value: function addTransition(start, end, actionType) {
-      if (this.structure.has(start) && this.structure.has(end)) {
-        var maps = this.structure.get(start);
+      if (this.structure.has(start.name) && this.structure.has(end.name)) {
+        var maps = this.structure.get(start.name);
         if (!maps) {
           var newMap = new Map();
-          newMap.set(actionType, end);
-          this.structure.set(start, newMap);
+          newMap.set(actionType, end.name);
+          this.structure.set(start.name, newMap);
         } else {
-          maps.set(actionType, end);
+          maps.set(actionType, end.name);
         }
       } else {
         throw new Error('Invalid transition for machine!');

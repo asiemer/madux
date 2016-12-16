@@ -16,47 +16,47 @@ describe('Bounds', () => {
 
   it('should create propper SingleBound', () => {
     const machine = new Machine([state1, state2, state3]);
-    const single = new SingleBound(machine, state1.name);
-    expect(single.start).to.equal(state1.name);
+    const single = new SingleBound(machine, state1);
+    expect(single.start).to.equal(state1);
     expect(single.machine).to.equal(machine);
   });
 
   it('should create invalid SingleBound should fail', () => {
     const machine = new Machine([state1, state2]);
-    expect(() => new SingleBound(machine, state3.name)).to.throw();
+    expect(() => new SingleBound(machine, state3)).to.throw();
   });
 
   it('should create propper DoubleBound', () => {
     const machine = new Machine([state1, state2, state3]);
-    const double = new DoubleBound(machine, state1.name, state2.name);
-    expect(double.start).to.equal(state1.name);
-    expect(double.end).to.equal(state2.name);
+    const double = new DoubleBound(machine, state1, state2);
+    expect(double.start).to.equal(state1);
+    expect(double.end).to.equal(state2);
     expect(double.machine).to.equal(machine);
   });
 
   it('should create propper DoubleBound', () => {
     const machine = new Machine([state1, state2, state3]);
-    const double = new SingleBound(machine, state1.name).to(state2.name);
-    expect(double.start).to.equal(state1.name);
-    expect(double.end).to.equal(state2.name);
+    const double = new SingleBound(machine, state1).to(state2);
+    expect(double.start).to.equal(state1);
+    expect(double.end).to.equal(state2);
     expect(double.machine).to.equal(machine);
   });
 
   it('should create invalid DoubleBound should fail on first', () => {
     const machine = new Machine([state1, state2]);
-    expect(() => new DoubleBound(machine, state3.name, state1.name)).to.throw();
+    expect(() => new DoubleBound(machine, state3, state1)).to.throw();
   });
 
   it('should create invalid DoubleBound should fail on second', () => {
     const machine = new Machine([state1, state2]);
-    expect(() => new DoubleBound(machine, state1.name, state3.name)).to.throw();
+    expect(() => new DoubleBound(machine, state1, state3)).to.throw();
   });
 
   it('should create propper FullBound', () => {
     const machine = new Machine([state1, state2, state3]);
-    const double = new FullBound(machine, state1.name, state2.name, transition);
-    expect(double.start).to.equal(state1.name);
-    expect(double.end).to.equal(state2.name);
+    const double = new FullBound(machine, state1, state2, transition);
+    expect(double.start).to.equal(state1);
+    expect(double.end).to.equal(state2);
     expect(double.actionType).to.equal(transition);
     expect(double.machine).to.equal(machine);
     const maps = machine.structure.get(state1.name);
@@ -67,9 +67,9 @@ describe('Bounds', () => {
 
   it('should create propper FullBound', () => {
     const machine = new Machine([state1, state2, state3]);
-    const double = new DoubleBound(machine, state1.name, state2.name).on(transition);
-    expect(double.start).to.equal(state1.name);
-    expect(double.end).to.equal(state2.name);
+    const double = new DoubleBound(machine, state1, state2).on(transition);
+    expect(double.start).to.equal(state1);
+    expect(double.end).to.equal(state2);
     expect(double.actionType).to.equal(transition);
     expect(double.machine).to.equal(machine);
     const maps = machine.structure.get(state1.name);
@@ -80,11 +80,11 @@ describe('Bounds', () => {
 
   it('should create invalid FullBound should fail on first', () => {
     const machine = new Machine([state1, state2]);
-    expect(() => new FullBound(machine, state3.name, state1.name, transition)).to.throw();
+    expect(() => new FullBound(machine, state3, state1, transition)).to.throw();
   });
 
   it('should create invalid FullBound should fail on second', () => {
     const machine = new Machine([state1, state2]);
-    expect(() => new FullBound(machine, state1.name, state3.name, transition)).to.throw();
+    expect(() => new FullBound(machine, state1, state3, transition)).to.throw();
   });
 });

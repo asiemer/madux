@@ -1,6 +1,7 @@
 
 // @flow
 
+import { State } from './State';
 import { Machine } from './Machine';
 
 // Represents a stransition from the start to the end state. Note that
@@ -9,10 +10,10 @@ import { Machine } from './Machine';
 class FullBound {
 
   // Name of the start state of this transition.
-  start: string;
+  start: State;
 
   // Name of the end state of this transition.
-  end: string;
+  end: State;
 
   // Type of the action that causes this transition to fire.
   actionType: string;
@@ -23,8 +24,8 @@ class FullBound {
   // Creates a new isntance  of a transition. Note that when this transition
   // is created, it will also be created in the given machine. Of course start
   // and end should be names of states that are inside the given machine.
-  constructor(machine: Machine, start: string, end: string, actionType: string): void {
-    if (machine.states.has(start) && machine.states.has(end)) {
+  constructor(machine: Machine, start: State, end: State, actionType: string): void {
+    if (machine.states.get(start.name) === start && machine.states.get(end.name) === end) {
       this.start = start;
       this.end = end;
       this.actionType = actionType;
@@ -41,10 +42,10 @@ class FullBound {
 class DoubleBound {
 
   // Name of the start state of this transition.
-  start: string;
+  start: State;
 
   // Name of the end state of this transition.
-  end: string;
+  end: State;
 
   // The machine of this transition.
   machine: Machine;
@@ -52,8 +53,8 @@ class DoubleBound {
   // Creates a new instance of this transition, without the actionType
   // that triggers it. Note state the start state and end state should
   // be elements of the given machine.
-  constructor(machine: Machine, start: string, end: string): void {
-    if (machine.states.has(start) && machine.states.has(end)) {
+  constructor(machine: Machine, start: State, end: State): void {
+    if (machine.states.get(start.name) === start && machine.states.get(end.name) === end) {
       this.machine = machine;
       this.start = start;
       this.end = end;
@@ -74,7 +75,7 @@ class DoubleBound {
 class SingleBound {
 
   // Name of the start state of the transition.
-  start: string;
+  start: State;
 
   // The machine of this transition.
   machine: Machine;
@@ -82,8 +83,8 @@ class SingleBound {
   // Creates a new instance of this SingleBound with given start state
   // end machine. Of course the start state should be inside the given
   // machine.
-  constructor(machine: Machine, start: string): void {
-    if (machine.states.has(start)) {
+  constructor(machine: Machine, start: State): void {
+    if (machine.states.get(start.name) === start) {
       this.machine = machine;
       this.start = start;
     } else { throw new Error('Invalid state for machine!'); }
@@ -91,7 +92,7 @@ class SingleBound {
 
   // Returns a DoubleBound to bind an end state to the end of this
   // transition. Used to build transitions.
-  to(stop: string): DoubleBound { return new DoubleBound(this.machine, this.start, stop); }
+  to(stop: State): DoubleBound { return new DoubleBound(this.machine, this.start, stop); }
 
 }
 

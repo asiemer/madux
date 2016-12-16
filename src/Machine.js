@@ -39,7 +39,7 @@ class Machine {
   }
 
   // Function that creates a SingleBound to start building a transition.
-  from(name: string): SingleBound { return new SingleBound(this, name); }
+  from(state: State): SingleBound { return new SingleBound(this, state); }
 
   // Checks if this machine has the given state (with the same name).
   hasState(state: State): boolean { return this.hasStateName(state.name); }
@@ -64,14 +64,14 @@ class Machine {
 
   // Creates a transition from the start state to the end state which
   // triggers on the given actionType.
-  addTransition(start: string, end: string, actionType: string): void {
-    if (this.structure.has(start) && this.structure.has(end)) {
-      const maps = this.structure.get(start);
+  addTransition(start: State, end: State, actionType: string): void {
+    if (this.structure.has(start.name) && this.structure.has(end.name)) {
+      const maps = this.structure.get(start.name);
       if (!maps) {
         const newMap = new Map();
-        newMap.set(actionType, end);
-        this.structure.set(start, newMap);
-      } else { maps.set(actionType, end); }
+        newMap.set(actionType, end.name);
+        this.structure.set(start.name, newMap);
+      } else { maps.set(actionType, end.name); }
     } else { throw new Error('Invalid transition for machine!'); }
   }
 

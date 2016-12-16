@@ -14,7 +14,8 @@ exports.createStore = function (machine) {
 exports.createMachine = function (states) {
   return new _Machine.Machine(states);
 };
-exports.createState = function (name, props) {
+exports.createState = function (name) {
+  var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
   return new _State.State(name, props);
 };
 

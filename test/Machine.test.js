@@ -29,10 +29,10 @@ describe('Machine', () => {
     expect(machine.hasState(state2)).to.equal(true);
     expect(machine.hasState(state3)).to.equal(true);
     expect(machine.hasState(state4)).to.equal(false);
-    expect(machine.hasStateName(state1.name)).to.equal(true);
-    expect(machine.hasStateName(state2.name)).to.equal(true);
-    expect(machine.hasStateName(state3.name)).to.equal(true);
-    expect(machine.hasStateName(state4.name)).to.equal(false);
+    expect(machine.hasState(state1)).to.equal(true);
+    expect(machine.hasState(state2)).to.equal(true);
+    expect(machine.hasState(state3)).to.equal(true);
+    expect(machine.hasState(state4)).to.equal(false);
   });
 
   it('should create invalid Machine should fail', () => {
@@ -50,30 +50,30 @@ describe('Machine', () => {
 
   it('should work with from() on propper State from Machine', () => {
     const machine = new Machine([state1, state2, state3]);
-    const single = machine.from(state1.name);
-    expect(single.start).to.equal(state1.name);
+    const single = machine.from(state1);
+    expect(single.start).to.equal(state1);
     expect(single.machine).to.equal(machine);
   });
 
   it('should work with from() on another propper State from Machine', () => {
     const machine = new Machine([state1, state2, state3]);
-    const single = machine.from(state3.name);
-    expect(single.start).to.equal(state3.name);
+    const single = machine.from(state3);
+    expect(single.start).to.equal(state3);
     expect(single.machine).to.equal(machine);
   });
 
   it('should fail with invalid State from Machine', () => {
     const machine = new Machine([state1, state2, state3]);
-    expect(() => machine.from(state4.name)).to.throw();
+    expect(() => machine.from(state4)).to.throw();
   });
 
   it('should process transitions correctly', () => {
     const machine = new Machine([state1, state2, state3, state4]);
-    machine.from(state1.name).to(state2.name).on(trans1.type);
-    machine.from(state2.name).to(state4.name).on(trans2.type);
-    machine.from(state4.name).to(state1.name).on(trans3.type);
-    machine.from(state1.name).to(state3.name).on(trans4.type);
-    machine.from(state3.name).to(state2.name).on(trans5.type);
+    machine.from(state1).to(state2).on(trans1.type);
+    machine.from(state2).to(state4).on(trans2.type);
+    machine.from(state4).to(state1).on(trans3.type);
+    machine.from(state1).to(state3).on(trans4.type);
+    machine.from(state3).to(state2).on(trans5.type);
     machine.start();
     machine.dispatch(trans1);
     machine.dispatch(trans2);
@@ -85,7 +85,7 @@ describe('Machine', () => {
 
   it('should not dispatch without propper params', () => {
     const machine = new Machine([state1, state5]);
-    machine.from(state1.name).to(state5.name).on(trans1.type);
+    machine.from(state1).to(state5).on(trans1.type);
     machine.start();
     expect(machine.canDispatch(trans1)).to.equal(false);
     expect(machine.canDispatch(trans6)).to.equal(true);

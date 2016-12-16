@@ -2,6 +2,8 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _State = require('./State');
+
 var _Machine = require('./Machine');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -23,7 +25,7 @@ var FullBound =
 function FullBound(machine, start, end, actionType) {
   _classCallCheck(this, FullBound);
 
-  if (machine.states.has(start) && machine.states.has(end)) {
+  if (machine.states.get(start.name) === start && machine.states.get(end.name) === end) {
     this.start = start;
     this.end = end;
     this.actionType = actionType;
@@ -56,7 +58,7 @@ var DoubleBound = function () {
   function DoubleBound(machine, start, end) {
     _classCallCheck(this, DoubleBound);
 
-    if (machine.states.has(start) && machine.states.has(end)) {
+    if (machine.states.get(start.name) === start && machine.states.get(end.name) === end) {
       this.machine = machine;
       this.start = start;
       this.end = end;
@@ -101,7 +103,7 @@ var SingleBound = function () {
   function SingleBound(machine, start) {
     _classCallCheck(this, SingleBound);
 
-    if (machine.states.has(start)) {
+    if (machine.states.get(start.name) === start) {
       this.machine = machine;
       this.start = start;
     } else {

@@ -47,11 +47,11 @@ describe('Store', () => {
 
   it('should call subscribers correclty', () => {
     const machine = new Machine([state1, state2, state3, state4]);
-    machine.from(state1.name).to(state2.name).on(trans1.type);
-    machine.from(state2.name).to(state4.name).on(trans2.type);
-    machine.from(state4.name).to(state1.name).on(trans3.type);
-    machine.from(state1.name).to(state3.name).on(trans4.type);
-    machine.from(state3.name).to(state2.name).on(trans5.type);
+    machine.from(state1).to(state2).on(trans1.type);
+    machine.from(state2).to(state4).on(trans2.type);
+    machine.from(state4).to(state1).on(trans3.type);
+    machine.from(state1).to(state3).on(trans4.type);
+    machine.from(state3).to(state2).on(trans5.type);
     const store = new Store(machine);
     let c1 = 0;
     const uns1 = store.subscribe(() => { c1 += 1; });
@@ -74,11 +74,11 @@ describe('Store', () => {
 
   it('should dispatch transitions correctly', () => {
     const machine = new Machine([state1, state2, state3, state4]);
-    machine.from(state1.name).to(state2.name).on(trans1.type);
-    machine.from(state2.name).to(state4.name).on(trans2.type);
-    machine.from(state4.name).to(state1.name).on(trans3.type);
-    machine.from(state1.name).to(state3.name).on(trans4.type);
-    machine.from(state3.name).to(state2.name).on(trans5.type);
+    machine.from(state1).to(state2).on(trans1.type);
+    machine.from(state2).to(state4).on(trans2.type);
+    machine.from(state4).to(state1).on(trans3.type);
+    machine.from(state1).to(state3).on(trans4.type);
+    machine.from(state3).to(state2).on(trans5.type);
     const store = new Store(machine);
     store.dispatch(trans1);
     store.dispatch(trans2);
@@ -90,7 +90,7 @@ describe('Store', () => {
 
   it('should not dispatch without propper params', () => {
     const machine = new Machine([state1, state5]);
-    machine.from(state1.name).to(state5.name).on(trans1.type);
+    machine.from(state1).to(state5).on(trans1.type);
     const store = new Store(machine);
     store.dispatch(trans1);
     expect(store.getState()).to.equal(state1);
@@ -109,11 +109,11 @@ describe('Store', () => {
       next(action);
     };
     const machine = new Machine([state1, state2, state3, state4]);
-    machine.from(state1.name).to(state2.name).on(trans1.type);
-    machine.from(state2.name).to(state4.name).on(trans2.type);
-    machine.from(state4.name).to(state1.name).on(trans3.type);
-    machine.from(state1.name).to(state3.name).on(trans4.type);
-    machine.from(state3.name).to(state2.name).on(trans5.type);
+    machine.from(state1).to(state2).on(trans1.type);
+    machine.from(state2).to(state4).on(trans2.type);
+    machine.from(state4).to(state1).on(trans3.type);
+    machine.from(state1).to(state3).on(trans4.type);
+    machine.from(state3).to(state2).on(trans5.type);
     const store = new Store(machine, [m1, m2]);
     store.dispatch(trans1);
     store.dispatch(trans2);

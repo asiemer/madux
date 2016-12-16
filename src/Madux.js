@@ -10,7 +10,7 @@ exports.createStore = (machine: Machine, middlewares: Array<Middleware> = []) =>
   new Store(machine, middlewares);
 
 exports.createMachine = (states: Array<State>) => new Machine(states);
-exports.createState = (name: string, props: Array<PropDefinition>) => new State(name, props);
+exports.createState = (name: string, props: Array<PropDefinition> = []) => new State(name, props);
 
 exports.Machine = Machine;
 exports.State = State;
