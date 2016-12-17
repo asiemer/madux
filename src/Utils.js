@@ -30,7 +30,7 @@ export const areValidStates = (states: Array<any> = []): boolean =>
 
 export const isValidAction = (action: any = {}): boolean =>
   isDict(action)
-  && ('name' in action)
+  && ('type' in action)
   && typeof action.type === 'string'
   && ('params' in action)
   && isDict(action.params);

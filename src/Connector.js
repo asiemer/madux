@@ -27,6 +27,8 @@ export class Connector {
   constructor(state: State): void {
     if (!isValidState(state)) { throw new Error(`invalid state: ${JSON.stringify(state)}`); }
     this.state = state;
+    this.next = new Map();
+    this.previous = new Map();
   }
 
   /**
