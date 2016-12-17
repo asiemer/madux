@@ -4,98 +4,82 @@
 import type { State } from './Types';
 import { Machine } from './Machine';
 
-// Represents a stransition from the start to the end state. Note that
-// states are always represented by their names! It also has a type
-// to know which actiontype will cause this transition to fire.
-class FullBound {
+/**
+ * The DoubleBinder represents a transition from a given state to a given end state. The actionType
+ * that triggers this transition is not known yet. This way the DoubleBinder can be used to make
+ * it easy to use a builder pattern while constructing a transition.
+ */
+export class DoubleBinder {
 
-  // Name of the start state of this transition.
   start: State;
-
-  // Name of the end state of this transition.
   end: State;
-
-  // Type of the action that causes this transition to fire.
-  actionType: string;
-
-  // The machine on which this transition lives.
   machine: Machine;
 
-  // Creates a new isntance  of a transition. Note that when this transition
-  // is created, it will also be created in the given machine. Of course start
-  // and end should be names of states that are inside the given machine.
-  constructor(machine: Machine, start: State, end: State, actionType: string): void {
-    if (machine.states.get(start.name) === start && machine.states.get(end.name) === end) {
-      this.start = start;
-      this.end = end;
-      this.actionType = actionType;
-      this.machine = machine;
-      machine.addTransition(start, end, actionType);
-    } else { throw new Error('Invalid states for machine!'); }
-  }
-
-}
-
-// This creates a transition where the actionType that triggers
-// the transition is not set yet. This is used to construct the
-// cool builder pattern to create transitions.
-class DoubleBound {
-
-  // Name of the start state of this transition.
-  start: State;
-
-  // Name of the end state of this transition.
-  end: State;
-
-  // The machine of this transition.
-  machine: Machine;
-
-  // Creates a new instance of this transition, without the actionType
-  // that triggers it. Note state the start state and end state should
-  // be elements of the given machine.
   constructor(machine: Machine, start: State, end: State): void {
-    if (machine.states.get(start.name) === start && machine.states.get(end.name) === end) {
+    if (machine.hasState(start) && machine.hasState(end)) {
       this.machine = machine;
       this.start = start;
       this.end = end;
-    } else { throw new Error('Invalid states for machine!'); }
+    } else { throw new Error(`invalid states for machine: ${start.name} - ${end.name}`); }
   }
 
-  // Function to complete the builder pattern an combine an actionType
-  // that triggers this transition with this transition itself.
-  on(trigger: string): FullBound {
-    return new FullBound(this.machine, this.start, this.end, trigger);
+  /**
+   * Creates a new transition in the this.machine with from the this.start state to the this.end
+   * state on the given actionType. This way this function call is the last one in the series
+   * of function calls when creating a transition with the builder pattern.
+   * @param {Array<string>} actionTypes - The actionTypes that should trigger the transition.
+   * @throws {Error} - When the states are invalid for the machine.
+   */
+  on(...actionTypes: Array<string>): void {
+    if (this.machine.hasState(this.start) && this.machine.hasState(this.end)) {
+      actionTypes.forEach(actionType =>
+        this.machine.addTransition(this.start, actionType, this.end));
+    } else { throw new Error(`invalid states for machine: ${this.start.name} - ${this.end.name}`); }
   }
 
 }
 
-// A half transition that is only bound to the start state. It does
-// not have an end or actionType that triggers the transition. This
-// is used for the builder pattern for transitions.
-class SingleBound {
+/**
+ * This class is a temporary instance that is used while building a transition for the given
+ * machine. This class will bind a single State as start state to the transition and provide a
+ * function that can be used to convert it to a DoubleBinder.
+ */
+export class SingleBinder {
 
-  // Name of the start state of the transition.
   start: State;
-
-  // The machine of this transition.
   machine: Machine;
 
-  // Creates a new instance of this SingleBound with given start state
-  // end machine. Of course the start state should be inside the given
-  // machine.
   constructor(machine: Machine, start: State): void {
-    if (machine.states.get(start.name) === start) {
-      this.machine = machine;
+    if (machine.hasState(start)) {
       this.start = start;
-    } else { throw new Error('Invalid state for machine!'); }
+      this.machine = machine;
+    } else { throw new Error(`invalid state for machine: ${start.name}`); }
   }
 
-  // Returns a DoubleBound to bind an end state to the end of this
-  // transition. Used to build transitions.
-  to(stop: State): DoubleBound { return new DoubleBound(this.machine, this.start, stop); }
+  /**
+   * Returns a DoubleBinder that has this same start State, but also binds to the given end State.
+   * @param {State} end - The end State for the transition.
+   * @return {DoubleBinder} - The binder that holds the start and end state.
+   */
+  to(end: State): DoubleBinder { return new DoubleBinder(this.machine, this.start, end); }
 
 }
 
-exports.SingleBound = SingleBound;
-exports.DoubleBound = DoubleBound;
-exports.FullBound = FullBound;
+/**
+ * Creates a new DoubleBinder with the given States and machine. This is just syntactic sugar for
+ * the following statements: new DoubleBinder(machine, start, end);
+ * @param {Machine} machine - The machine of the Doublebinder.
+ * @param {State} start - The start State that the Binder holds.
+ * @param {State} end - The end State that the Binder holds.
+ */
+export const createDoubleBinder = (machine: Machine, start: State, end: State) =>
+  new DoubleBinder(machine, start, end);
+
+/**
+ * Creates a new SingleBinder with the given State and machine. This is just syntactic sugar for
+ * the following statements: new SingleBinder(machine, start);
+ * @param {Machine} machine - The machine of the Doublebinder.
+ * @param {State} start - The start State that the Binder holds.
+ */
+export const createSingleBinder = (machine: Machine, start: State) =>
+  new SingleBinder(machine, start);
