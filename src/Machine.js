@@ -2,6 +2,7 @@
 // @flow
 
 import type { State, Action } from './Types';
+import { createStore, Store } from './Store';
 import { createConnector, Connector } from './Connector';
 import { createSingleBinder, SingleBinder } from './Binders';
 import { isValidState, areValidStates, isValidActionForState } from './Utils';
@@ -93,6 +94,18 @@ export class Machine {
     this.current = dest;
   }
 
+  /**
+   * Return a new store that uses this machine. The machine will automatically
+   * be started and locked.
+   * @return {Store} - The store that contains this machine.
+   */
+  buildStore(): Store { return createStore(this); }
+
 }
 
+/**
+ * Creates a new Machine with the given States. This is just syntactic sugar for
+ * the following statements: new Machine(...states);
+ * @param {Array<State>} states - The states of the machine.
+ */
 export const createMachine = (...states: Array<State>) => new Machine(...states);
