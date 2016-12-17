@@ -13,3 +13,16 @@
 - [ ] New internal structure for transition
 - [ ] Export static functions to a Util file
 - [ ] Think about test scenarios and skip them...
+
+### Future use...
+
+```js
+
+import { createMachine } from 'madux';
+
+const machine = createMachine(STRANGER, LOBBY, ROOM)
+machine.from(STRANGER).to(LOBBY).on(SIGNIN);
+
+export store = machine.buildStore().bindMiddlewares(maduxBind);
+
+```
