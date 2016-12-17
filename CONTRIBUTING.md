@@ -13,6 +13,7 @@
 - [x] New internal structure for transition
 - [x] Export static functions to a Util file
 - [ ] Think about test scenarios and skip them... (+ fix old)
+- [ ] Update readme with new example
 
 ### Future use...
 
