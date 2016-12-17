@@ -3,7 +3,6 @@
 
 import chai from 'chai';
 import { createMachine } from '../src/Machine';
-import type { State } from '../src/Types';
 import { createSingleBinder, createDoubleBinder } from '../src/Binders';
 
 const expect = chai.expect;
