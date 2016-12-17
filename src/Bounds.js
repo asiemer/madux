@@ -1,7 +1,7 @@
 
 // @flow
 
-import { State } from './State';
+import type { State } from './Types';
 import { Machine } from './Machine';
 
 // Represents a stransition from the start to the end state. Note that

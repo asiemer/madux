@@ -5,28 +5,13 @@ import { State } from './State';
 import { SingleBound } from './Bounds';
 import type { Action } from './Types';
 
-// Represents a state machine that will handle all the internal logic.
 class Machine {
 
-  // The name of the current state of the machine, null if not started yet.
   current: ?string;
-
-  // The name of the initial state of the machine. This is the first state
-  // given to the constructor.
   initial: string;
-
-  // A map of all the states which maps the names to the states for
-  // O(1) lookup.
   states: Map<string, State>;
-
-  // The internal structure which represents the transitions. In general
-  // it works like this: this.structure.get(start).get(actionType) = destination.
   structure: Map<string, Map<string, string>>;
 
-  // Creates a new instance of a state machine with the given states and
-  // middlewares. The first given state will be the initial state.
-  // The list of middlewares will be wrapped around the dispatch function
-  // in the order as they are provided. The created machine has no transitions.
   constructor(states: Array<State>): void {
     if (states.length < 1) { throw new Error('You need at least one state!'); }
     this.states = new Map();
