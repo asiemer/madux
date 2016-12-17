@@ -12,6 +12,40 @@ describe('Binders', () => {
   const state2 = { name: 'B' };
   const state3 = { name: 'C' };
 
+  describe('DoubleBinder', () => {
+    describe('Constructor', () => {
+      it('creates a normal DoubleBinder with valid info', () => {});
+      it('fails with invalid start State for DoubleBinder', () => {});
+      it('fails with invalid end State for DoubleBinder', () => {});
+      it('fails with some param null or undefined', () => {});
+      it('reports correctly if machine is invalid', () => {});
+    });
+    describe('Function: on', () => {
+      it('works with valid actions', () => {});
+      it('works without actions', () => {});
+      it('fails with invalid actions', () => {});
+    });
+  });
+
+  describe('SingleBinder', () => {
+    describe('Constructor', () => {
+      it('creates a normal SingleBinder with valid info', () => {});
+      it('fails with invalid start State for SingleBinder', () => {});
+      it('fails with some param null or undefined', () => {});
+      it('reports correctly if machine is invalid', () => {});
+    });
+    describe('Function: to', () => {
+      it('works with valid state', () => {});
+      it('fails without state', () => {});
+      it('fails with invalid state', () => {});
+    });
+  });
+
+  describe('Creators', () => {
+    it('should create DoubleBinder', () => {});
+    it('should create SingleBinder', () => {});
+  });
+
   it('should create propper SingleBound', () => {
     const machine = createMachine(state1, state2, state3);
     const single = createSingleBinder(machine, state1);
