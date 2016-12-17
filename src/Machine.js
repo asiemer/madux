@@ -6,7 +6,7 @@ import { createConnector, Connector } from './Connector';
 import { createSingleBinder, SingleBinder } from './Binders';
 import { isValidState, areValidStates, isValidActionForState } from './Utils';
 
-class Machine {
+export class Machine {
 
   locked: boolean;
   initial: string;
@@ -95,5 +95,4 @@ class Machine {
 
 }
 
-exports.Machine = Machine;
-exports.createMachine = (...states: Array<State>) => new Machine(...states);
+export const createMachine = (...states: Array<State>) => new Machine(...states);
