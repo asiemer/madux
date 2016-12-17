@@ -43,7 +43,7 @@ var areValidStates = exports.areValidStates = function areValidStates() {
 
 var isValidAction = exports.isValidAction = function isValidAction() {
   var action = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  return isDict(action) && 'name' in action && typeof action.type === 'string' && 'params' in action && isDict(action.params);
+  return isDict(action) && 'type' in action && typeof action.type === 'string' && 'params' in action && isDict(action.params);
 };
 
 var areValidPropsForPropDefinitions = exports.areValidPropsForPropDefinitions = function areValidPropsForPropDefinitions() {

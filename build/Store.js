@@ -133,8 +133,8 @@ var Store = exports.Store = function () {
      */
 
   }, {
-    key: 'bindMiddlewares',
-    value: function bindMiddlewares() {
+    key: 'bindMiddleware',
+    value: function bindMiddleware() {
       var _this4 = this;
 
       for (var _len = arguments.length, middlewares = Array(_len), _key = 0; _key < _len; _key++) {

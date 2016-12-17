@@ -34,6 +34,8 @@ var Connector = exports.Connector = function () {
       throw new Error('invalid state: ' + JSON.stringify(state));
     }
     this.state = state;
+    this.next = new Map();
+    this.previous = new Map();
   }
 
   /**
