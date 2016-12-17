@@ -104,7 +104,7 @@ export class Store {
    * @param {Array<Middleware>} middlewares - The middlewares to add.
    * @return {Store} - The store itself.
    */
-  bindMiddlewares(...middlewares: Array<Middleware>): Store {
+  bindMiddleware(...middlewares: Array<Middleware>): Store {
     middlewares.forEach(m => this.addMiddleware(m));
     return this;
   }
