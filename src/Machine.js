@@ -1,98 +1,99 @@
 
 // @flow
 
-import { State } from './State';
+import { isValidState, areValidStates, isValidActionForState } from './Utils';
+import { Connector, createConnector } from './Connector';
 import { SingleBound } from './Bounds';
-import type { Action } from './Types';
+import type { State, Action } from './Types';
 
 class Machine {
 
-  current: ?string;
+  locked: boolean;
   initial: string;
-  states: Map<string, State>;
-  structure: Map<string, Map<string, string>>;
+  current: ?string;
+  states: Map<string, Connector>;
 
-  constructor(states: Array<State>): void {
-    if (states.length < 1) { throw new Error('You need at least one state!'); }
-    this.states = new Map();
-    this.structure = new Map();
-    states.forEach((state) => {
-      if (!this.initial) this.initial = state.name;
-      this.states.set(state.name, state);
-      this.structure.set(state.name, new Map());
-    });
+  constructor(...states: Array<State>): void {
+    if (states.length >= 1 && areValidStates(states)) {
+      this.initial = states[0].name;
+      this.states = states.reduce((map, state) =>
+        map.set(state.name, createConnector(state)), new Map());
+    } else if (states.length < 1) {
+      throw new Error(`expected at least one state: ${states.length} given`);
+    } else { throw new Error('expected valid states, but arguments are invalid'); }
   }
 
-  // Function that creates a SingleBound to start building a transition.
-  from(state: State): SingleBound { return new SingleBound(this, state); }
-
-  // Checks if this machine has the given state (with the same name).
-  hasState(state: State): boolean { return this.hasStateName(state.name); }
-
-  // Checks if this machine has a state with given name.
-  hasStateName(name: string): boolean { return this.states.has(name); }
-
-  // Initializes the current state to the initial state.
-  start(): void { this.current = this.initial; }
-
-  // Sets the current state to null.
   stop(): void { this.current = null; }
-
-  // Checks if the current state is set.
+  start(): void { this.current = this.initial; }
   isStarted(): boolean { return !!this.current; }
 
-  // Returns the current state if this machine is started. If not,
-  // it returns null.
   getCurrentState(): ?State {
-    return this.current ? this.states.get(this.current) : null;
+    const connector = this.current ? this.states.get(this.current) : null;
+    return connector ? connector.state : null;
   }
 
-  // Creates a transition from the start state to the end state which
-  // triggers on the given actionType.
-  addTransition(start: State, end: State, actionType: string): void {
-    if (this.structure.has(start.name) && this.structure.has(end.name)) {
-      const maps = this.structure.get(start.name);
-      if (!maps) {
-        const newMap = new Map();
-        newMap.set(actionType, end.name);
-        this.structure.set(start.name, newMap);
-      } else { maps.set(actionType, end.name); }
-    } else { throw new Error('Invalid transition for machine!'); }
+  lock(): void { this.locked = true; }
+  unlock(): void { this.locked = false; }
+  isLocked(): boolean { return !!this.locked; }
+
+  hasStateName(name: string): boolean { return this.states.has(name); }
+  hasState(state: State): boolean {
+    const connector = this.states.get(state.name);
+    return isValidState(state) && !!connector && connector.state === state;
   }
 
-  // Checks if the machine can dispatch the given action at
-  // this moment. This means it is started yet, there is a transition
-  // that is triggered by this action that starts from the current
-  // state and the action has all the params needed for the destination
-  // state.
-  canDispatch(action: Action): boolean {
-    if (this.current && this.structure.has(this.current)) {
-      const transitions = this.structure.get(this.current);
-      if (transitions && transitions.has(action.type)) {
-        const destination = transitions.get(action.type);
-        if (destination) {
-          const state = this.states.get(destination);
-          if (state) { return state.validate(action.params); }
-        }
-      }
-    }
-    return false;
+  from(state: State): SingleBound { return new SingleBound(this, state); }
+
+  /**
+   * Adds a transition from the given state to the given end state that triggers on the given
+   * actionType. Both start and end state should be in this machine. This can only be done when
+   * the machine is not locked!
+   * @param {State} start - The start state of the transition.
+   * @param {string} actionType - The actionType that should trigger the action.
+   * @param {State} end - The end state of the transition.
+   * @throws {Error} - If and only if the states are invalid, !actionType, the states are not
+   *                   available to the machine or the machine is locked.
+   */
+  addTransition(start: State, actionType: string, end: State): void {
+    if (this.isLocked()) { throw new Error('this machine is locked'); }
+    if (isValidState(start) && isValidState(end) && actionType) {
+      const connectorA = this.states.get(start.name);
+      const connectorB = this.states.get(end.name);
+      if (connectorA && connectorB && connectorA.state === start && connectorB.state === end) {
+        connectorA.addTransitionForwards(actionType, end.name);
+        connectorB.addTransitionBackwards(actionType, start.name);
+      } else { throw new Error(`states not in this machine: ${start.name} - ${end.name}`); }
+    } else { throw new Error(`invalid states for transition: ${start.name} - ${end.name}`); }
   }
 
-  // Dispatches the given action. If, for some reason, this state
-  // machine can not dispatch, it will ignore the input.
-  dispatch(action: Action) {
-    if (this.canDispatch(action)) {
-      if (!this.current) { throw new Error('This machine is not started!'); }
-      const maps = this.structure.get(this.current);
-      if (maps) {
-        const destination = maps.get(action.type);
-        if (destination) this.current = destination;
-        if (!destination) throw new Error('No destination found!');
-      } else { throw new Error('No map found, fatal!'); }
-    }
+  /**
+   * Returns whether or not this machine can process the given action at the moment. This is based
+   * on whether or not there is a transition leaving from the current state with the given
+   * action.type and also the action has all the required properties for the destination state.
+   * @param {Action} action - The action that should be checked.
+   * @return {boolean} - Whether or not the given action can be processed.
+   */
+  canProcess(action: Action): boolean {
+    const connector = this.current ? this.states.get(this.current) : null;
+    const name = connector ? connector.getDestinationStateName(action.type) : null;
+    const dest = name ? this.states.get(name) : null;
+    return !!connector && !!dest && isValidActionForState(action, dest.state);
+  }
+
+  /**
+   * Processes the given action when it can be processed (see canProcess(action: Action)).
+   * @param {Action} - The action that will be processed.
+   * @throws {Error} - If and only if the destination is not found or the action can't be processed.
+   */
+  process(action: Action): void {
+    if (!this.canProcess(action)) { throw new Error('this action can not be processed'); }
+    const connectorA = this.current ? this.states.get(this.current) : null;
+    const dest = connectorA ? connectorA.getDestinationStateName(action.type) : null;
+    if (!dest) { throw new Error('something went wrong, no dest found'); }
+    this.current = dest;
   }
 
 }
 
 exports.Machine = Machine;
+exports.createMachine = (...states: Array<State>) => new Machine(...states);

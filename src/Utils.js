@@ -25,6 +25,9 @@ export const isValidState = (state: any = {}): boolean =>
   && typeof state.name === 'string'
   && ('props' in state ? areValidPropDefinitions(state.props) : true);
 
+export const areValidStates = (states: Array<any> = []): boolean =>
+  isArr(states) && states.reduce((bool, state) => bool && isValidState(state), true);
+
 export const isValidAction = (action: any = {}): boolean =>
   isDict(action)
   && ('name' in action)
