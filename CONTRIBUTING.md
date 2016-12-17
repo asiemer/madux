@@ -12,7 +12,7 @@
 - [x] Store vs Machine brainstorm
 - [x] New internal structure for transition
 - [x] Export static functions to a Util file
-- [ ] Think about test scenarios and skip them... (+ fix old)
+- [ ] Think about test scenarios and skip them atm...
 - [ ] Update readme with new example
 
 ### Future use...
