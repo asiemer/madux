@@ -1,10 +1,10 @@
 
 // @flow
 
-import { isValidState, areValidStates, isValidActionForState } from './Utils';
-import { Connector, createConnector } from './Connector';
-import { SingleBound } from './Bounds';
 import type { State, Action } from './Types';
+import { createConnector, Connector } from './Connector';
+import { createSingleBinder, SingleBinder } from './Binders';
+import { isValidState, areValidStates, isValidActionForState } from './Utils';
 
 class Machine {
 
@@ -42,7 +42,7 @@ class Machine {
     return isValidState(state) && !!connector && connector.state === state;
   }
 
-  from(state: State): SingleBound { return new SingleBound(this, state); }
+  from(state: State): SingleBinder { return createSingleBinder(this, state); }
 
   /**
    * Adds a transition from the given state to the given end state that triggers on the given
