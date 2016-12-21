@@ -5,7 +5,8 @@ import {
   SingleBinder,
   DoubleBinder,
   createSingleBinder,
-  createDoubleBinder } from '../src/Binders';
+  createDoubleBinder,
+} from '../src/Binders';
 
 const expect = chai.expect;
 
