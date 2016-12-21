@@ -4,7 +4,7 @@ import { createConnector, Connector } from '../src/Connector';
 
 const expect = chai.expect;
 
-describe('Connector', () => {
+describe('Connector.js', () => {
   const stateA = { name: 'A' };
   const stateB = { name: 'B' };
   const actionType = 'ACTION';
@@ -25,7 +25,7 @@ describe('Connector', () => {
         expect(() => createConnector(undefined)).to.throw();
       });
     });
-    describe('addTransitionForwards', () => {
+    describe('Function: addTransitionForwards', () => {
       it('adds a forward transition with valid type and state', () => {
         const connector = createConnector(stateA);
         connector.addTransitionForwards(actionType, stateB.name);
@@ -51,7 +51,7 @@ describe('Connector', () => {
         expect(() => connector.addTransitionForwards(actionType, stateB.name)).to.throw();
       });
     });
-    describe('addTransitionBackwards', () => {
+    describe('Function: addTransitionBackwards', () => {
       it('add a backwards transition with valid type and state', () => {
         const connector = createConnector(stateA);
         connector.addTransitionBackwards(actionType, stateB.name);
@@ -72,7 +72,7 @@ describe('Connector', () => {
         expect(connector.previous.get(undefined).size).to.equal(1);
       });
     });
-    describe('getDestinationStateName', () => {
+    describe('Function: getDestinationStateName', () => {
       it('returns correct statename', () => {
         const connector = createConnector(stateA);
         connector.addTransitionForwards(actionType, stateB.name);
@@ -83,7 +83,7 @@ describe('Connector', () => {
         expect(connector.getDestinationStateName(actionType)).to.equal(undefined);
       });
     });
-    describe('getSourceStateNames', () => {
+    describe('Function: getSourceStateNames', () => {
       it('returns correct set', () => {
         const connector = createConnector(stateA);
         connector.addTransitionBackwards(actionType, stateA.name);
@@ -97,7 +97,7 @@ describe('Connector', () => {
         expect(connector.getSourceStateNames(actionType).size).to.equal(0);
       });
     });
-    describe('getPossibleActions', () => {
+    describe('Function: getPossibleActions', () => {
       it('returns correct set', () => {
         const connector = createConnector(stateA);
         connector.addTransitionForwards(actionType, stateA.name);

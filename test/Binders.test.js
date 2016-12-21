@@ -10,7 +10,7 @@ import {
 
 const expect = chai.expect;
 
-describe('Binders', () => {
+describe('Binders.js', () => {
   const state1 = { name: 'A' };
   const state2 = { name: 'B' };
   const state3 = { name: 'C' };
