@@ -6,6 +6,29 @@ import { createMachine } from '../src/Machine';
 
 const expect = chai.expect;
 
+describe('Machine.js', () => {
+  describe('Machine', () => {
+    describe('Constructor', () => {
+      it('should work with valid states', () => {});
+      it('fails on invalid states', () => {});
+      it('fails without states', () => {});
+    });
+    describe('Function: stop', () => {
+      it('should stop the machine', () => {});
+    });
+    describe('Function: start', () => {
+      it('should start the machine', () => {});
+    });
+    describe('Function: isStarted', () => {
+      it('should return correct value in any case', () => {});
+    });
+    describe('Function: getCurrentState', () => {
+      it('should return correct state', () => {});
+      it('should return null when not started', () => {});
+    });
+  });
+});
+
 describe('Machine', () => {
   const state1 = { name: 'A' };
   const state2 = { name: 'B' };
