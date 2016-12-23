@@ -5,76 +5,6 @@ import { createMachine } from '../src/Machine';
 const expect = chai.expect;
 
 describe('Machine.js', () => {
-  describe('Machine', () => {
-    describe('Constructor', () => {
-      it('should work with valid states', () => {});
-      it('fails on invalid states', () => {});
-      it('fails without states', () => {});
-    });
-    describe('Function: stop', () => {
-      it('should stop the machine', () => {});
-    });
-    describe('Function: start', () => {
-      it('should start the machine', () => {});
-    });
-    describe('Function: isStarted', () => {
-      it('should return correct value in any case', () => {});
-    });
-    describe('Function: getCurrentState', () => {
-      it('should return correct state', () => {});
-      it('should return null when not started', () => {});
-    });
-    describe('Function: lock', () => {
-      it('should lock the machine', () => {});
-    });
-    describe('Function: unlock', () => {
-      it('should unlock the machine', () => {});
-    });
-    describe('Function: isLocked', () => {
-      it('should return correct value in any case', () => {});
-    });
-    describe('Function: hasStateName', () => {
-      it('should return false if state is not in machine', () => {});
-      it('should return true if state is in machine', () => {});
-    });
-    describe('Function: hasState', () => {
-      it('should return false if state is not in machine', () => {});
-      it('should return true if state is in machine', () => {});
-      it('should return true if duplicate state is in machine', () => {});
-    });
-    describe('Function: from', () => {
-      it('returns a correct SingleBinder', () => {});
-      it('throws on invalid state', () => {});
-      it('throws on state that is not in machine', () => {});
-    });
-    describe('Function: addTransition', () => {
-      it('works with valid transition', () => {});
-      it('throws if the transition already exists', () => {});
-      it('throws when machine is locked', () => {});
-      it('throws with invalid states', () => {});
-      it('throws with invalid actionType', () => {});
-    });
-    describe('Function: canProcess', () => {
-      it('returns true on valid transition', () => {});
-      it('returns false on invalid transition', () => {});
-      it('returns false on invalid actionType', () => {});
-    });
-    describe('Function: process', () => {
-      it('updates to correct state', () => {});
-      it('throws when machine is inlocked', () => {});
-      it('throws when destination is not found', () => {});
-    });
-    describe('Function: buildStore', () => {
-      it('returns a store', () => {});
-      it('throws when machine is invalid?', () => {});
-    });
-  });
-  describe('Creators', () => {
-    it('should create Machine', () => {});
-  });
-});
-
-describe('Machine', () => {
   const state1 = { name: 'A' };
   const state2 = { name: 'B' };
   const state3 = { name: 'C' };
@@ -92,45 +22,197 @@ describe('Machine', () => {
   const trans4 = { type: 'TRANS4', params: {} };
   const trans5 = { type: 'TRANS5', params: {} };
   const trans6 = { type: 'TRANS1', params: { room: 5 } };
-
-  it('should create propper Machine', () => {
-    const machine = createMachine(state1, state2, state3);
-    expect(machine.hasState(state1)).to.equal(true);
-    expect(machine.hasState(state2)).to.equal(true);
-    expect(machine.hasState(state3)).to.equal(true);
-    expect(machine.hasState(state4)).to.equal(false);
-    expect(machine.hasState(state1)).to.equal(true);
-    expect(machine.hasState(state2)).to.equal(true);
-    expect(machine.hasState(state3)).to.equal(true);
-    expect(machine.hasState(state4)).to.equal(false);
+  describe('Machine', () => {
+    describe('Constructor', () => {
+      it('should work with valid states', () => {
+        const machine = createMachine(state1, state2, state3);
+        expect(machine.hasState(state1)).to.equal(true);
+        expect(machine.hasState(state2)).to.equal(true);
+        expect(machine.hasState(state3)).to.equal(true);
+        expect(machine.hasState(state4)).to.equal(false);
+        expect(machine.hasState(state1)).to.equal(true);
+        expect(machine.hasState(state2)).to.equal(true);
+        expect(machine.hasState(state3)).to.equal(true);
+        expect(machine.hasState(state4)).to.equal(false);
+      });
+      it('fails on invalid states', () => {
+        expect(() => createMachine(state1, {})).to.throw();
+        expect(() => createMachine({})).to.throw();
+      });
+      it('fails without states', () => {
+        expect(() => createMachine()).to.throw();
+      });
+    });
+    describe('Function: stop', () => {
+      it('should stop the machine', () => {
+        const machine = createMachine(state1);
+        expect(machine.isStarted()).to.equal(false);
+        machine.stop();
+        expect(machine.isStarted()).to.equal(false);
+      });
+    });
+    describe('Function: start', () => {
+      it('should start the machine', () => {
+        const machine = createMachine(state1);
+        expect(machine.isStarted()).to.equal(false);
+        machine.start();
+        expect(machine.isStarted()).to.equal(true);
+      });
+    });
+    describe('Function: isStarted', () => {
+      it('should return correct value in any case', () => {
+        const machine = createMachine(state1);
+        expect(machine.isStarted()).to.equal(false);
+        machine.stop();
+        expect(machine.isStarted()).to.equal(false);
+        machine.start();
+        expect(machine.isStarted()).to.equal(true);
+        machine.stop();
+        expect(machine.isStarted()).to.equal(false);
+      });
+    });
+    describe('Function: getCurrentState', () => {
+      it('should return correct state', () => {
+        const machine = createMachine(state1);
+        machine.start();
+        expect(machine.getCurrentState()).to.equal(state1);
+      });
+      it('should return null when not started', () => {
+        const machine = createMachine(state1);
+        expect(machine.getCurrentState()).to.equal(null);
+      });
+    });
+    describe('Function: lock', () => {
+      it('should lock the machine', () => {
+        const machine = createMachine(state1);
+        expect(machine.isLocked()).to.equal(false);
+        machine.lock();
+        expect(machine.isLocked()).to.equal(true);
+      });
+    });
+    describe('Function: unlock', () => {
+      it('should unlock the machine', () => {
+        const machine = createMachine(state1);
+        expect(machine.isLocked()).to.equal(false);
+        machine.lock();
+        expect(machine.isLocked()).to.equal(true);
+        machine.unlock();
+        expect(machine.isLocked()).to.equal(false);
+      });
+    });
+    describe('Function: isLocked', () => {
+      it('should return correct value in any case', () => {
+        const machine = createMachine(state1);
+        expect(machine.isLocked()).to.equal(false);
+        machine.lock();
+        expect(machine.isLocked()).to.equal(true);
+        machine.unlock();
+        expect(machine.isLocked()).to.equal(false);
+      });
+    });
+    describe('Function: hasStateName', () => {
+      it('should return false if state is not in machine', () => {
+        const machine = createMachine(state1, state2);
+        expect(machine.hasStateName(null)).to.equal(false);
+        expect(machine.hasStateName(undefined)).to.equal(false);
+        expect(machine.hasStateName(state4.name)).to.equal(false);
+      });
+      it('should return true if state is in machine', () => {
+        const machine = createMachine(state1, state2);
+        expect(machine.hasStateName(state1.name)).to.equal(true);
+        expect(machine.hasStateName(state2.name)).to.equal(true);
+      });
+    });
+    describe('Function: hasState', () => {
+      it('should return false if state is not in machine', () => {
+        const machine = createMachine(state1, state2);
+        expect(machine.hasState(null)).to.equal(false);
+        expect(machine.hasState(undefined)).to.equal(false);
+        expect(machine.hasState(state4)).to.equal(false);
+      });
+      it('should return true if state is in machine', () => {
+        const machine = createMachine(state1, state2);
+        expect(machine.hasState(state1)).to.equal(true);
+        expect(machine.hasState(state2)).to.equal(true);
+      });
+      it('should return true if duplicate state is in machine', () => {
+        const machine = createMachine(state1, state2);
+        expect(machine.hasState({ name: 'A' })).to.equal(true);
+      });
+    });
+    describe('Function: from', () => {
+      it('returns a correct SingleBinder', () => {
+        const machine = createMachine(state1, state2);
+        const binder = machine.from(state1);
+        expect(binder.start).to.equal(state1);
+      });
+      it('throws on invalid state', () => {
+        const machine = createMachine(state1, state2);
+        expect(() => machine.from({})).to.throw();
+        expect(() => machine.from(undefined)).to.throw();
+        expect(() => machine.from(null)).to.throw();
+        expect(() => machine.from()).to.throw();
+      });
+      it('throws on state that is not in machine', () => {
+        const machine = createMachine(state1, state2);
+        expect(() => machine.from(state4)).to.throw();
+      });
+    });
+    describe('Function: addTransition', () => {
+      it('works with valid transition', () => {
+        const machine = createMachine(state1, state2);
+        machine.addTransition(state1, trans1.type, state2);
+        expect(machine.states.get(state1.name).next.get(trans1.type)).to.equal(state2.name);
+      });
+      it('throws if the transition already exists', () => {
+        const machine = createMachine(state1, state2, state3);
+        machine.addTransition(state1, trans1.type, state2);
+        expect(() => machine.addTransition(state1, trans1.type, state3)).to.throw();
+      });
+      it('throws when machine is locked', () => {
+        const machine = createMachine(state1, state2);
+        machine.lock();
+        expect(() => machine.addTransition(state1, trans1.type, state2)).to.throw();
+      });
+      it('throws with invalid states', () => {
+        const machine = createMachine(state1, state2, state3);
+        machine.addTransition(state1, trans1.type, state2);
+        expect(() => machine.addTransition(null, trans1.type, state3)).to.throw();
+        expect(() => machine.addTransition(undefined, trans1.type, state3)).to.throw();
+        expect(() => machine.addTransition(null, trans1.type, null)).to.throw();
+        expect(() => machine.addTransition(null, trans1.type, undefined)).to.throw();
+        expect(() => machine.addTransition(state4, trans1.type, state3)).to.throw();
+        expect(() => machine.addTransition(state1, trans1.type, state4)).to.throw();
+      });
+      it('throws with invalid actionType', () => {
+        const machine = createMachine(state1, state2, state3);
+        machine.addTransition(state1, trans1.type, state2);
+        expect(() => machine.addTransition(state1, {}, state2)).to.throw();
+        expect(() => machine.addTransition(state1, null, state3)).to.throw();
+        expect(() => machine.addTransition(state1, undefined, state2)).to.throw();
+      });
+    });
+    describe('Function: canProcess', () => {
+      it('returns true on valid transition', () => {});
+      it('returns false on invalid transition', () => {});
+      it('returns false on invalid actionType', () => {});
+    });
+    describe('Function: process', () => {
+      it('updates to correct state', () => {});
+      it('throws when machine is inlocked', () => {});
+      it('throws when destination is not found', () => {});
+    });
+    describe('Function: buildStore', () => {
+      it('returns a store', () => {});
+      it('throws when machine is invalid', () => {});
+    });
   });
-
-  it('should create invalid Machine should fail', () => {
-    expect(() => createMachine()).to.throw();
+  describe('Creators', () => {
+    it('should create Machine', () => {});
   });
+});
 
-  it('should work with start() on propper Machine', () => {
-    const machine = createMachine(state1, state2, state3);
-    expect(machine.isStarted()).to.equal(false);
-    machine.start();
-    expect(machine.isStarted()).to.equal(true);
-    machine.stop();
-    expect(machine.isStarted()).to.equal(false);
-  });
-
-  it('should work with from() on propper State from Machine', () => {
-    const machine = createMachine(state1, state2, state3);
-    const single = machine.from(state1);
-    expect(single.start).to.equal(state1);
-    expect(single.machine).to.equal(machine);
-  });
-
-  it('should work with from() on another propper State from Machine', () => {
-    const machine = createMachine(state1, state2, state3);
-    const single = machine.from(state3);
-    expect(single.start).to.equal(state3);
-    expect(single.machine).to.equal(machine);
-  });
+describe('Machine', () => {
 
   it('should fail with invalid State from Machine', () => {
     const machine = createMachine(state1, state2, state3);
@@ -164,4 +246,5 @@ describe('Machine', () => {
     machine.process(trans6);
     expect(machine.current).to.equal(state5.name);
   });
+
 });
