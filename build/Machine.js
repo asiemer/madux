@@ -17,6 +17,10 @@ var _Utils = require('./Utils');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Machine class which represents the internal state machine.
+ * @author  Jensen Bernard
+ */
 var Machine = exports.Machine = function () {
   function Machine() {
     _classCallCheck(this, Machine);

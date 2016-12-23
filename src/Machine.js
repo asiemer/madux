@@ -7,6 +7,10 @@ import { createConnector, Connector } from './Connector';
 import { createSingleBinder, SingleBinder } from './Binders';
 import { isValidState, areValidStates, isValidActionForState } from './Utils';
 
+/**
+ * Machine class which represents the internal state machine.
+ * @author  Jensen Bernard
+ */
 export class Machine {
 
   locked: boolean;

@@ -1,6 +1,4 @@
 
-// @flow
-
 import chai from 'chai';
 import { createMachine } from '../src/Machine';
 
@@ -26,6 +24,53 @@ describe('Machine.js', () => {
       it('should return correct state', () => {});
       it('should return null when not started', () => {});
     });
+    describe('Function: lock', () => {
+      it('should lock the machine', () => {});
+    });
+    describe('Function: unlock', () => {
+      it('should unlock the machine', () => {});
+    });
+    describe('Function: isLocked', () => {
+      it('should return correct value in any case', () => {});
+    });
+    describe('Function: hasStateName', () => {
+      it('should return false if state is not in machine', () => {});
+      it('should return true if state is in machine', () => {});
+    });
+    describe('Function: hasState', () => {
+      it('should return false if state is not in machine', () => {});
+      it('should return true if state is in machine', () => {});
+      it('should return true if duplicate state is in machine', () => {});
+    });
+    describe('Function: from', () => {
+      it('returns a correct SingleBinder', () => {});
+      it('throws on invalid state', () => {});
+      it('throws on state that is not in machine', () => {});
+    });
+    describe('Function: addTransition', () => {
+      it('works with valid transition', () => {});
+      it('throws if the transition already exists', () => {});
+      it('throws when machine is locked', () => {});
+      it('throws with invalid states', () => {});
+      it('throws with invalid actionType', () => {});
+    });
+    describe('Function: canProcess', () => {
+      it('returns true on valid transition', () => {});
+      it('returns false on invalid transition', () => {});
+      it('returns false on invalid actionType', () => {});
+    });
+    describe('Function: process', () => {
+      it('updates to correct state', () => {});
+      it('throws when machine is inlocked', () => {});
+      it('throws when destination is not found', () => {});
+    });
+    describe('Function: buildStore', () => {
+      it('returns a store', () => {});
+      it('throws when machine is invalid?', () => {});
+    });
+  });
+  describe('Creators', () => {
+    it('should create Machine', () => {});
   });
 });
 
