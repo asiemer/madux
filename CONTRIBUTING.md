@@ -14,6 +14,7 @@
 - [ ] Add scenario tests
 - [ ] Update readme with new example
 - [ ] Update readme with experiment notice
+- [ ] Fix the properties aspect of states
 
 ### Future use...
 

@@ -85,8 +85,9 @@ var Machine = exports.Machine = function () {
   }, {
     key: 'hasState',
     value: function hasState(state) {
+      if (!state) return false;
       var connector = this.states.get(state.name);
-      return (0, _Utils.isValidState)(state) && !!connector && connector.state === state;
+      return (0, _Utils.isValidState)(state) && !!connector && JSON.stringify(connector.state) === JSON.stringify(state);
     }
   }, {
     key: 'from',
@@ -111,7 +112,7 @@ var Machine = exports.Machine = function () {
       if (this.isLocked()) {
         throw new Error('this machine is locked');
       }
-      if ((0, _Utils.isValidState)(start) && (0, _Utils.isValidState)(end) && actionType) {
+      if ((0, _Utils.isValidState)(start) && (0, _Utils.isValidState)(end) && actionType && typeof actionType === 'string') {
         var connectorA = this.states.get(start.name);
         var connectorB = this.states.get(end.name);
         if (connectorA && connectorB && connectorA.state === start && connectorB.state === end) {
@@ -136,8 +137,9 @@ var Machine = exports.Machine = function () {
   }, {
     key: 'canProcess',
     value: function canProcess(action) {
+      var type = action ? action.type : '';
       var connector = this.current ? this.states.get(this.current) : null;
-      var name = connector ? connector.getDestinationStateName(action.type) : null;
+      var name = connector ? connector.getDestinationStateName(type) : null;
       var dest = name ? this.states.get(name) : null;
       return !!connector && !!dest && (0, _Utils.isValidActionForState)(action, dest.state);
     }
@@ -153,6 +155,9 @@ var Machine = exports.Machine = function () {
     value: function process(action) {
       if (!this.canProcess(action)) {
         throw new Error('this action can not be processed');
+      }
+      if (!this.isLocked()) {
+        throw new Error('this machine should be locked');
       }
       var connectorA = this.current ? this.states.get(this.current) : null;
       var dest = connectorA ? connectorA.getDestinationStateName(action.type) : null;

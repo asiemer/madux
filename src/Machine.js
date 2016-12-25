@@ -43,8 +43,10 @@ export class Machine {
 
   hasStateName(name: string): boolean { return this.states.has(name); }
   hasState(state: State): boolean {
+    if (!state) return false;
     const connector = this.states.get(state.name);
-    return isValidState(state) && !!connector && connector.state === state;
+    return isValidState(state) && !!connector &&
+      JSON.stringify(connector.state) === JSON.stringify(state);
   }
 
   from(state: State): SingleBinder { return createSingleBinder(this, state); }
@@ -61,7 +63,7 @@ export class Machine {
    */
   addTransition(start: State, actionType: string, end: State): void {
     if (this.isLocked()) { throw new Error('this machine is locked'); }
-    if (isValidState(start) && isValidState(end) && actionType) {
+    if (isValidState(start) && isValidState(end) && actionType && typeof actionType === 'string') {
       const connectorA = this.states.get(start.name);
       const connectorB = this.states.get(end.name);
       if (connectorA && connectorB && connectorA.state === start && connectorB.state === end) {
@@ -79,8 +81,9 @@ export class Machine {
    * @return {boolean} - Whether or not the given action can be processed.
    */
   canProcess(action: Action): boolean {
+    const type = action ? action.type : '';
     const connector = this.current ? this.states.get(this.current) : null;
-    const name = connector ? connector.getDestinationStateName(action.type) : null;
+    const name = connector ? connector.getDestinationStateName(type) : null;
     const dest = name ? this.states.get(name) : null;
     return !!connector && !!dest && isValidActionForState(action, dest.state);
   }
@@ -92,6 +95,7 @@ export class Machine {
    */
   process(action: Action): void {
     if (!this.canProcess(action)) { throw new Error('this action can not be processed'); }
+    if (!this.isLocked()) { throw new Error('this machine should be locked'); }
     const connectorA = this.current ? this.states.get(this.current) : null;
     const dest = connectorA ? connectorA.getDestinationStateName(action.type) : null;
     if (!dest) { throw new Error('something went wrong, no dest found'); }
