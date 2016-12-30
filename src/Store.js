@@ -73,6 +73,7 @@ export class Store {
    * @return {func} - Function to unsubscribe the function.
    */
   subscribe(func: (prv: ?State, act: Action, nxt: ?State) => void) {
+    if (!func) { throw new Error('invalid function'); }
     this.mutateListeners();
     this.nListeners.push(func);
     return () => {
@@ -90,6 +91,7 @@ export class Store {
    * @return {func} - Function to unsubscribe the function.
    */
   addMiddleware(middleware: Middleware) {
+    if (!middleware) { throw new Error('invalid middleware'); }
     this.mutateMiddlewares();
     this.nMiddlewares.push(middleware);
     return () => {

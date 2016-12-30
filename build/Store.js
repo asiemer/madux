@@ -95,6 +95,9 @@ var Store = exports.Store = function () {
     value: function subscribe(func) {
       var _this2 = this;
 
+      if (!func) {
+        throw new Error('invalid function');
+      }
       this.mutateListeners();
       this.nListeners.push(func);
       return function () {
@@ -117,6 +120,9 @@ var Store = exports.Store = function () {
     value: function addMiddleware(middleware) {
       var _this3 = this;
 
+      if (!middleware) {
+        throw new Error('invalid middleware');
+      }
       this.mutateMiddlewares();
       this.nMiddlewares.push(middleware);
       return function () {
