@@ -9,12 +9,12 @@ var ARRSTR = '[object Array]';
 
 var isDict = exports.isDict = function isDict() {
   var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  return data && Object.prototype.toString.call(data) === OBJSTR;
+  return !!data && Object.prototype.toString.call(data) === OBJSTR;
 };
 
 var isArr = exports.isArr = function isArr() {
-  var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  return data && Object.prototype.toString.call(data) === ARRSTR;
+  var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  return !!data && Object.prototype.toString.call(data) === ARRSTR;
 };
 
 var isValidPropDefinition = exports.isValidPropDefinition = function isValidPropDefinition() {
@@ -24,7 +24,7 @@ var isValidPropDefinition = exports.isValidPropDefinition = function isValidProp
 
 var areValidPropDefinitions = exports.areValidPropDefinitions = function areValidPropDefinitions() {
   var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  return props && isArr(props) && props.reduce(function (bool, prop) {
+  return !!props && isArr(props) && props.reduce(function (bool, prop) {
     return bool && isValidPropDefinition(prop);
   }, true);
 };

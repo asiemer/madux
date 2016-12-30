@@ -5,10 +5,10 @@ const OBJSTR = '[object Object]';
 const ARRSTR = '[object Array]';
 
 export const isDict = (data: any = []): boolean =>
-  data && Object.prototype.toString.call(data) === OBJSTR;
+  !!data && Object.prototype.toString.call(data) === OBJSTR;
 
-export const isArr = (data: any = []): boolean =>
-  data && Object.prototype.toString.call(data) === ARRSTR;
+export const isArr = (data: any = {}): boolean =>
+  !!data && Object.prototype.toString.call(data) === ARRSTR;
 
 export const isValidPropDefinition = (prop: any = {}): boolean =>
   isDict(prop)
@@ -17,7 +17,9 @@ export const isValidPropDefinition = (prop: any = {}): boolean =>
   && ('required' in prop ? typeof prop.required === 'boolean' : true);
 
 export const areValidPropDefinitions = (props: Array<any> = []): boolean =>
-  props && isArr(props) && props.reduce((bool, prop) => bool && isValidPropDefinition(prop), true);
+  !!props
+  && isArr(props)
+  && props.reduce((bool, prop) => bool && isValidPropDefinition(prop), true);
 
 export const isValidState = (state: any = {}): boolean =>
   isDict(state)
