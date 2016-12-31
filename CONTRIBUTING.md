@@ -10,7 +10,7 @@
 - [x] Store vs Machine brainstorm
 - [x] New internal structure for transition
 - [x] Export static functions to a Util file
-- [ ] Complete tests
+- [x] Complete tests
 - [ ] Add scenario tests
 - [ ] Update readme with new example
 - [ ] Update readme with experiment notice
