@@ -97,9 +97,9 @@ describe('Utils.js', () => {
     expect(areValidPropsForPropDefinitions({}, {})).to.equal(false);
     expect(areValidPropsForPropDefinitions({}, [])).to.equal(true);
     expect(areValidPropsForPropDefinitions({
-      name: 'Name',
+      number: 5,
     }, [{
-      name: 'name',
+      name: 'number',
       required: true,
     }])).to.equal(true);
     expect(areValidPropsForPropDefinitions({
@@ -108,5 +108,6 @@ describe('Utils.js', () => {
       name: 'age',
       required: true,
     }])).to.equal(false);
+    expect(areValidPropsForPropDefinitions({ name: 'Name' }, [])).to.equal(true);
   });
 });

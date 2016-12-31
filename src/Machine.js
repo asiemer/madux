@@ -16,11 +16,13 @@ export class Machine {
   locked: boolean;
   initial: string;
   current: ?string;
+  options: Object;
   states: Map<string, Connector>;
 
   constructor(...states: Array<State>): void {
     if (states.length >= 1 && areValidStates(states)) {
       this.initial = states[0].name;
+      this.options = {};
       this.states = states.reduce((map, state) =>
         map.set(state.name, createConnector(state)), new Map());
     } else if (states.length < 1) {
@@ -31,6 +33,16 @@ export class Machine {
   stop(): void { this.current = null; }
   start(): void { this.current = this.initial; }
   isStarted(): boolean { return !!this.current; }
+
+  getOptions(): Object { return this.options || {}; }
+  clearOptions(): void { this.options = {}; }
+  mergeOptions(params: Object): Object { return Object.assign({}, this.getOptions(), params); }
+  updateAction(action: Action): Action {
+    return {
+      type: action.type,
+      params: this.mergeOptions(action.params),
+    };
+  }
 
   getCurrentState(): ?State {
     const connector = this.current ? this.states.get(this.current) : null;
@@ -80,7 +92,9 @@ export class Machine {
    * @param {Action} action - The action that should be checked.
    * @return {boolean} - Whether or not the given action can be processed.
    */
-  canProcess(action: Action): boolean {
+  canProcess(raw: Action): boolean {
+    if (!raw) return false;
+    const action = this.updateAction(raw);
     const type = action ? action.type : '';
     const connector = this.current ? this.states.get(this.current) : null;
     const name = connector ? connector.getDestinationStateName(type) : null;
@@ -93,13 +107,15 @@ export class Machine {
    * @param {Action} - The action that will be processed.
    * @throws {Error} - If and only if the destination is not found or the action can't be processed.
    */
-  process(action: Action): void {
+  process(raw: Action): void {
+    const action = this.updateAction(raw);
     if (!this.canProcess(action)) { throw new Error('this action can not be processed'); }
     if (!this.isLocked()) { throw new Error('this machine should be locked'); }
     const connectorA = this.current ? this.states.get(this.current) : null;
     const dest = connectorA ? connectorA.getDestinationStateName(action.type) : null;
     if (!dest) { throw new Error('something went wrong, no dest found'); }
     this.current = dest;
+    this.options = action.params;
   }
 
   /**
