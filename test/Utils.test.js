@@ -7,6 +7,8 @@ import {
   areValidPropDefinitions,
   isValidState,
   areValidStates,
+  isValidAction,
+  areValidPropsForPropDefinitions,
 } from '../src/Utils';
 
 const expect = chai.expect;
@@ -75,5 +77,36 @@ describe('Utils.js', () => {
       { name: 'A' },
       { name: 'J', props: [{ name: 'J', required: true }] },
     ])).to.equal(true);
+  });
+  it('should detect valid action', () => {
+    expect(isValidAction(null)).to.equal(false);
+    expect(isValidAction(undefined)).to.equal(false);
+    expect(isValidAction({})).to.equal(false);
+    expect(isValidAction({ name: [] })).to.equal(false);
+    expect(isValidAction(null)).to.equal(false);
+    expect(isValidAction(undefined)).to.equal(false);
+    expect(isValidAction(true)).to.equal(false);
+    expect(isValidAction([])).to.equal(false);
+    expect(isValidAction('')).to.equal(false);
+    expect(isValidAction([1])).to.equal(false);
+    expect(isValidAction({ type: 'A' })).to.equal(false);
+    expect(isValidAction({ type: 'A', params: {} })).to.equal(true);
+  });
+  it('should check valid props for definitions', () => {
+    expect(areValidPropsForPropDefinitions('', {})).to.equal(false);
+    expect(areValidPropsForPropDefinitions({}, {})).to.equal(false);
+    expect(areValidPropsForPropDefinitions({}, [])).to.equal(true);
+    expect(areValidPropsForPropDefinitions({
+      name: 'Name',
+    }, [{
+      name: 'name',
+      required: true,
+    }])).to.equal(true);
+    expect(areValidPropsForPropDefinitions({
+      name: 'Name',
+    }, [{
+      name: 'age',
+      required: true,
+    }])).to.equal(false);
   });
 });
