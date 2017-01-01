@@ -23,6 +23,25 @@
 
 import { createMachine } from 'madux';
 
+const NAMES = {
+  ROOM: 'ROOM',
+  LOBBY: 'LOBBY',
+  STRANGER: 'STRANGER',
+};
+
+export const STRANGER = { name: NAMES.STRANGER };
+
+export const LOBBY = { name: NAMES.LOBBY };
+
+export const ROOM = {
+  name: NAMES.ROOM,
+  props: {
+    name: 'number',
+    required: true,
+    remember: [ NAMES.ROOM ],
+  },
+};
+
 const machine = createMachine(STRANGER, LOBBY, ROOM)
 machine.from(STRANGER).to(LOBBY).on(SIGNIN);
 
