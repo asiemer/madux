@@ -31,6 +31,7 @@ var Machine = exports.Machine = function () {
 
     if (states.length >= 1 && (0, _Utils.areValidStates)(states)) {
       this.initial = states[0].name;
+      this.options = {};
       this.states = states.reduce(function (map, state) {
         return map.set(state.name, (0, _Connector.createConnector)(state));
       }, new Map());
@@ -55,6 +56,29 @@ var Machine = exports.Machine = function () {
     key: 'isStarted',
     value: function isStarted() {
       return !!this.current;
+    }
+  }, {
+    key: 'getOptions',
+    value: function getOptions() {
+      return this.options || {};
+    }
+  }, {
+    key: 'clearOptions',
+    value: function clearOptions() {
+      this.options = {};
+    }
+  }, {
+    key: 'mergeOptions',
+    value: function mergeOptions(params) {
+      return Object.assign({}, this.getOptions(), params);
+    }
+  }, {
+    key: 'updateAction',
+    value: function updateAction(action) {
+      return {
+        type: action.type,
+        params: this.mergeOptions(action.params)
+      };
     }
   }, {
     key: 'getCurrentState',
@@ -136,7 +160,9 @@ var Machine = exports.Machine = function () {
 
   }, {
     key: 'canProcess',
-    value: function canProcess(action) {
+    value: function canProcess(raw) {
+      if (!raw) return false;
+      var action = this.updateAction(raw);
       var type = action ? action.type : '';
       var connector = this.current ? this.states.get(this.current) : null;
       var name = connector ? connector.getDestinationStateName(type) : null;
@@ -152,7 +178,8 @@ var Machine = exports.Machine = function () {
 
   }, {
     key: 'process',
-    value: function process(action) {
+    value: function process(raw) {
+      var action = this.updateAction(raw);
       if (!this.canProcess(action)) {
         throw new Error('this action can not be processed');
       }
@@ -165,6 +192,7 @@ var Machine = exports.Machine = function () {
         throw new Error('something went wrong, no dest found');
       }
       this.current = dest;
+      this.options = action.params;
     }
 
     /**
