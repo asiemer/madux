@@ -35,6 +35,11 @@ export class Machine {
   isStarted(): boolean { return !!this.current; }
 
   getOptions(): Object { return this.options || {}; }
+
+  updateOptions(): void {
+    this.options = this.options.filter(option => option.remember.indexOf(this.current) >= 0);
+  }
+
   clearOptions(): void { this.options = {}; }
   mergeOptions(params: Object): Object { return Object.assign({}, this.getOptions(), params); }
   updateAction(action: Action): Action {
