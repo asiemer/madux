@@ -63,6 +63,15 @@ var Machine = exports.Machine = function () {
       return this.options || {};
     }
   }, {
+    key: 'updateOptions',
+    value: function updateOptions() {
+      var _this = this;
+
+      this.options = this.options.filter(function (option) {
+        return option.remember.indexOf(_this.current) >= 0;
+      });
+    }
+  }, {
     key: 'clearOptions',
     value: function clearOptions() {
       this.options = {};
