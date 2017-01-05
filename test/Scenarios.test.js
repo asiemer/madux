@@ -44,7 +44,14 @@ describe('Scenarios', () => {
   it('Scenario #2', () => {
     const STRANGER = { name: 'stranger' };
     const LOBBY = { name: 'lobby' };
-    const ROOM = { name: 'room', props: [{ name: 'number', required: true }] };
+    const ROOM = {
+      name: 'room',
+      props: [{
+        name: 'number',
+        merge: true,
+        required: true,
+      }],
+    };
 
     const SIGNIN = 'SIGNIN';
     const SIGNOUT = 'SIGNOUT';
