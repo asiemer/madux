@@ -81,8 +81,8 @@ var Machine = exports.Machine = function () {
       return Object.assign({}, this.getOptionsToMerge(), action.params);
     }
   }, {
-    key: 'getMergedAction',
-    value: function getMergedAction(action) {
+    key: 'updateActionParameters',
+    value: function updateActionParameters(action) {
       return {
         type: action.type,
         params: this.getMergedOptions(action)
@@ -183,14 +183,30 @@ var Machine = exports.Machine = function () {
 
   }, {
     key: 'canProcess',
-    value: function canProcess(raw) {
-      if (!raw) return false;
-      var action = this.getMergedAction(raw);
-      var type = action ? action.type : '';
-      var connector = this.current ? this.states.get(this.current) : null;
-      var name = connector ? connector.getDestinationStateName(type) : null;
-      var dest = name ? this.states.get(name) : null;
-      return !!connector && !!dest && (0, _Utils.isValidActionForState)(action, dest.state);
+    value: function canProcess(plain) {
+      try {
+        this.crashForInvalidAction(plain);
+        return true;
+      } catch (exc) {
+        return false;
+      }
+    }
+  }, {
+    key: 'crashForInvalidAction',
+    value: function crashForInvalidAction(plain) {
+      if (!plain) throw new Error('action may not be null or undefined');
+      if (!(0, _Utils.isValidAction)(plain)) throw new Error('action does not have valid structure');
+      var action = this.updateActionParameters(plain);
+      if (!this.current) throw new Error('this machine has no current state');
+      var connector = this.states.get(this.current);
+      if (!connector) throw new Error('this machine has no current state-connector');
+      var name = connector.getDestinationStateName(action.type);
+      if (!name) throw new Error('no transition found for type ' + action.type);
+      var dest = this.states.get(name);
+      if (!dest) throw new Error('destination state ' + name + ' not in this machine');
+      if (!(0, _Utils.isValidActionForState)(action, dest.state)) {
+        throw new Error('parameters not correctly instanciated: ' + JSON.stringify(action));
+      }
     }
 
     /**
@@ -202,7 +218,7 @@ var Machine = exports.Machine = function () {
   }, {
     key: 'process',
     value: function process(raw) {
-      var action = this.getMergedAction(raw);
+      var action = this.updateActionParameters(raw);
       if (!this.canProcess(action)) {
         throw new Error('this action can not be processed');
       }

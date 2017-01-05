@@ -5,7 +5,7 @@ import type { State, Action } from './Types';
 import { createStore, Store } from './Store';
 import { createConnector, Connector } from './Connector';
 import { createSingleBinder, SingleBinder } from './Binders';
-import { isValidState, areValidStates, isValidActionForState } from './Utils';
+import { isValidState, areValidStates, isValidActionForState, isValidAction } from './Utils';
 
 /**
  * Machine class which represents the internal state machine.
@@ -48,7 +48,7 @@ export class Machine {
     return Object.assign({}, this.getOptionsToMerge(), action.params);
   }
 
-  getMergedAction(action: Action): Object {
+  updateActionParameters(action: Action): Object {
     return {
       type: action.type,
       params: this.getMergedOptions(action),
@@ -113,14 +113,27 @@ export class Machine {
    * @param {Action} action - The action that should be checked.
    * @return {boolean} - Whether or not the given action can be processed.
    */
-  canProcess(raw: Action): boolean {
-    if (!raw) return false;
-    const action = this.getMergedAction(raw);
-    const type = action ? action.type : '';
-    const connector = this.current ? this.states.get(this.current) : null;
-    const name = connector ? connector.getDestinationStateName(type) : null;
-    const dest = name ? this.states.get(name) : null;
-    return !!connector && !!dest && isValidActionForState(action, dest.state);
+  canProcess(plain: Action): boolean {
+    try {
+      this.crashForInvalidAction(plain);
+      return true;
+    } catch (exc) { return false; }
+  }
+
+  crashForInvalidAction(plain: Action): void {
+    if (!plain) throw new Error('action may not be null or undefined');
+    if (!isValidAction(plain)) throw new Error('action does not have valid structure');
+    const action = this.updateActionParameters(plain);
+    if (!this.current) throw new Error('this machine has no current state');
+    const connector = this.states.get(this.current);
+    if (!connector) throw new Error('this machine has no current state-connector');
+    const name = connector.getDestinationStateName(action.type);
+    if (!name) throw new Error(`no transition found for type ${action.type}`);
+    const dest = this.states.get(name);
+    if (!dest) throw new Error(`destination state ${name} not in this machine`);
+    if (!isValidActionForState(action, dest.state)) {
+      throw new Error(`parameters not correctly instanciated: ${JSON.stringify(action)}`);
+    }
   }
 
   /**
@@ -129,7 +142,7 @@ export class Machine {
    * @throws {Error} - If and only if the destination is not found or the action can't be processed.
    */
   process(raw: Action): void {
-    const action = this.getMergedAction(raw);
+    const action = this.updateActionParameters(raw);
     if (!this.canProcess(action)) { throw new Error('this action can not be processed'); }
     if (!this.isLocked()) { throw new Error('this machine should be locked'); }
     const connectorA = this.current ? this.states.get(this.current) : null;

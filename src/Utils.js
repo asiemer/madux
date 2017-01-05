@@ -30,6 +30,7 @@ export const isValidState = (state: any = {}): boolean =>
 export const areValidStates = (states: Array<any> = []): boolean =>
   isArr(states) && states.reduce((bool, state) => bool && isValidState(state), true);
 
+// TODO: An action must not have parameters...
 export const isValidAction = (action: any = {}): boolean =>
   isDict(action)
   && ('type' in action)
