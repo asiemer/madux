@@ -20,6 +20,7 @@
 #### Rebrand MADUX with flat design
 - [ ] Create a new flat icon
 - [ ] Make a sample Github Site
+- [ ] Create the basic Madux docs
 
 ## Version 0.2.0
 
