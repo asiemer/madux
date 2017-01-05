@@ -1,50 +1,28 @@
 
 # Contributing: Todos
 
-### Version 0.2.0
-- [ ] When Madux-bind is finished
-- [ ] Add documentation (with jsdoc)
 
-### Version 0.1.9
-- [x] State vs Action brainstorm
-- [x] Store vs Machine brainstorm
-- [x] New internal structure for transition
-- [x] Export static functions to a Util file
-- [x] Complete tests
-- [ ] Add scenario tests
-- [ ] Update readme with new example
-- [ ] Update readme with experiment notice
-- [ ] Fix the properties aspect of states
+## Next Version
+
+#### Internal updates
 - [ ] More detailed errors if canDispatch is false...
+- [ ] Refactor / Check all src files...
 
-### Future use...
+#### Final tests
+- [ ] Add tests for all functions!
+- [ ] Remove too many subtitles in the test files...
+- [ ] Add up to 5 scenario tests with all functions...
 
-```js
+#### Update README before update
+- [ ] Update readme with new example...
+- [ ] Update readme with experiment or proof-of-concept notice...
 
-import { createMachine } from 'madux';
+#### Rebrand MADUX with flat design
+- [ ] Create a new flat icon
+- [ ] Make a sample Github Site
 
-const NAMES = {
-  ROOM: 'ROOM',
-  LOBBY: 'LOBBY',
-  STRANGER: 'STRANGER',
-};
+## Version 0.2.0
 
-export const STRANGER = { name: NAMES.STRANGER };
+- [ ] When Madux-bind is finished...
 
-export const LOBBY = { name: NAMES.LOBBY };
-
-export const ROOM = {
-  name: NAMES.ROOM,
-  props: {
-    name: 'number',
-    required: true,
-    remember: [ NAMES.ROOM ],
-  },
-};
-
-const machine = createMachine(STRANGER, LOBBY, ROOM)
-machine.from(STRANGER).to(LOBBY).on(SIGNIN);
-
-export store = machine.buildStore().bindMiddlewares(maduxBind);
-
-```
+Madux-bind should be finished because we want to be sure that the API is very good (aka we need hands-on experience).
