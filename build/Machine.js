@@ -15,6 +15,8 @@ var _Binders = require('./Binders');
 
 var _Utils = require('./Utils');
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
@@ -31,7 +33,7 @@ var Machine = exports.Machine = function () {
 
     if (states.length >= 1 && (0, _Utils.areValidStates)(states)) {
       this.initial = states[0].name;
-      this.options = {};
+      this.currentOptions = [];
       this.states = states.reduce(function (map, state) {
         return map.set(state.name, (0, _Connector.createConnector)(state));
       }, new Map());
@@ -60,34 +62,46 @@ var Machine = exports.Machine = function () {
   }, {
     key: 'getOptions',
     value: function getOptions() {
-      return this.options || {};
+      return this.currentOptions.reduce(function (obj, opt) {
+        return Object.assign({}, obj, _defineProperty({}, opt.name, opt.value));
+      }, {});
     }
   }, {
-    key: 'updateOptions',
-    value: function updateOptions() {
-      var _this = this;
-
-      this.options = this.options.filter(function (option) {
-        return option.remember.indexOf(_this.current) >= 0;
-      });
+    key: 'getOptionsToMerge',
+    value: function getOptionsToMerge() {
+      return this.currentOptions.filter(function (opt) {
+        return opt.merge;
+      }).reduce(function (obj, opt) {
+        return Object.assign({}, obj, _defineProperty({}, opt.name, opt.value));
+      }, {});
     }
   }, {
-    key: 'clearOptions',
-    value: function clearOptions() {
-      this.options = {};
+    key: 'getMergedOptions',
+    value: function getMergedOptions(action) {
+      return Object.assign({}, this.getOptionsToMerge(), action.params);
     }
   }, {
-    key: 'mergeOptions',
-    value: function mergeOptions(params) {
-      return Object.assign({}, this.getOptions(), params);
-    }
-  }, {
-    key: 'updateAction',
-    value: function updateAction(action) {
+    key: 'getMergedAction',
+    value: function getMergedAction(action) {
       return {
         type: action.type,
-        params: this.mergeOptions(action.params)
+        params: this.getMergedOptions(action)
       };
+    }
+  }, {
+    key: 'parseOptionsForCurrentState',
+    value: function parseOptionsForCurrentState(options) {
+      var state = this.getCurrentState();
+      if (!state || !state.props) {
+        return [];
+      }
+      return state.props.map(function (prop) {
+        return {
+          name: prop.name,
+          merge: prop.merge,
+          value: options[prop.name]
+        };
+      });
     }
   }, {
     key: 'getCurrentState',
@@ -171,7 +185,7 @@ var Machine = exports.Machine = function () {
     key: 'canProcess',
     value: function canProcess(raw) {
       if (!raw) return false;
-      var action = this.updateAction(raw);
+      var action = this.getMergedAction(raw);
       var type = action ? action.type : '';
       var connector = this.current ? this.states.get(this.current) : null;
       var name = connector ? connector.getDestinationStateName(type) : null;
@@ -188,7 +202,7 @@ var Machine = exports.Machine = function () {
   }, {
     key: 'process',
     value: function process(raw) {
-      var action = this.updateAction(raw);
+      var action = this.getMergedAction(raw);
       if (!this.canProcess(action)) {
         throw new Error('this action can not be processed');
       }
@@ -201,7 +215,7 @@ var Machine = exports.Machine = function () {
         throw new Error('something went wrong, no dest found');
       }
       this.current = dest;
-      this.options = action.params;
+      this.currentOptions = this.parseOptionsForCurrentState(action.params);
     }
 
     /**
