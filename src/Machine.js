@@ -39,19 +39,30 @@ export class Machine {
       Object.assign({}, obj, { [opt.name]: opt.value }), {});
   }
 
-  // TODO: MergeOptionsBeforeDispatch?
-
-  updateOptions(): void {
-    this.options = this.options.filter(option => option.remember.indexOf(this.current) >= 0);
+  getOptionsToMerge(): Object {
+    return this.currentOptions.filter(opt => opt.merge).reduce((obj, opt) =>
+      Object.assign({}, obj, { [opt.name]: opt.value }), {});
   }
 
-  clearOptions(): void { this.options = {}; }
-  mergeOptions(params: Object): Object { return Object.assign({}, this.getOptions(), params); }
-  updateAction(action: Action): Action {
+  getMergedOptions(action: Action): Object {
+    return Object.assign({}, this.getOptionsToMerge(), action.params);
+  }
+
+  getMergedAction(action: Action): Object {
     return {
       type: action.type,
-      params: this.mergeOptions(action.params),
+      params: this.getMergedOptions(action),
     };
+  }
+
+  parseOptionsForCurrentState(options: Object): Array<Object> {
+    const state = this.getCurrentState();
+    if (!state || !state.props) { return []; }
+    return state.props.map(prop => ({
+      name: prop.name,
+      merge: prop.merge,
+      value: options[prop.name],
+    }));
   }
 
   getCurrentState(): ?State {
@@ -104,7 +115,7 @@ export class Machine {
    */
   canProcess(raw: Action): boolean {
     if (!raw) return false;
-    const action = this.updateAction(raw);
+    const action = this.getMergedAction(raw);
     const type = action ? action.type : '';
     const connector = this.current ? this.states.get(this.current) : null;
     const name = connector ? connector.getDestinationStateName(type) : null;
@@ -118,14 +129,14 @@ export class Machine {
    * @throws {Error} - If and only if the destination is not found or the action can't be processed.
    */
   process(raw: Action): void {
-    const action = this.updateAction(raw);
+    const action = this.getMergedAction(raw);
     if (!this.canProcess(action)) { throw new Error('this action can not be processed'); }
     if (!this.isLocked()) { throw new Error('this machine should be locked'); }
     const connectorA = this.current ? this.states.get(this.current) : null;
     const dest = connectorA ? connectorA.getDestinationStateName(action.type) : null;
     if (!dest) { throw new Error('something went wrong, no dest found'); }
     this.current = dest;
-    this.options = action.params;
+    this.currentOptions = this.parseOptionsForCurrentState(action.params);
   }
 
   /**

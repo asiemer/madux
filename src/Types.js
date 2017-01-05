@@ -3,7 +3,8 @@
 
 export type StatePropDefinition = {
   name: string;
-  required: boolean;
+  merge?: boolean;
+  required?: boolean;
 };
 
 export type State = {

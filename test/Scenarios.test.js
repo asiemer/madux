@@ -72,7 +72,7 @@ describe('Scenarios', () => {
     store.dispatch(enter('#1'));
     store.dispatch(send('hello'));
     expect(store.machine.getCurrentState()).to.equal(ROOM);
-    console.log(store.machine.options);
+    // console.log(store.machine.options);
 
     store.dispatch(leave());
     store.dispatch(logout());
