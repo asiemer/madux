@@ -33,7 +33,7 @@ var Machine = exports.Machine = function () {
 
     if (states.length >= 1 && (0, _Utils.areValidStates)(states)) {
       this.initial = states[0].name;
-      this.currentOptions = [];
+      this.props = [];
       this.states = states.reduce(function (map, state) {
         return map.set(state.name, (0, _Connector.createConnector)(state));
       }, new Map());
@@ -60,32 +60,32 @@ var Machine = exports.Machine = function () {
       return !!this.current;
     }
   }, {
-    key: 'getOptions',
-    value: function getOptions() {
-      return this.currentOptions.reduce(function (obj, opt) {
+    key: 'getProps',
+    value: function getProps() {
+      return this.props.reduce(function (obj, opt) {
         return Object.assign({}, obj, _defineProperty({}, opt.name, opt.value));
       }, {});
     }
   }, {
-    key: 'getOptionsToMerge',
-    value: function getOptionsToMerge() {
-      return this.currentOptions.filter(function (opt) {
+    key: 'getPropsToMerge',
+    value: function getPropsToMerge() {
+      return this.props.filter(function (opt) {
         return opt.merge;
       }).reduce(function (obj, opt) {
         return Object.assign({}, obj, _defineProperty({}, opt.name, opt.value));
       }, {});
     }
   }, {
-    key: 'getMergedOptions',
-    value: function getMergedOptions(action) {
-      return Object.assign({}, this.getOptionsToMerge(), action.params);
+    key: 'getMergedProps',
+    value: function getMergedProps(action) {
+      return Object.assign({}, this.getPropsToMerge(), action.params);
     }
   }, {
     key: 'updateActionParameters',
     value: function updateActionParameters(action) {
       return {
         type: action.type,
-        params: this.getMergedOptions(action)
+        params: this.getMergedProps(action)
       };
     }
   }, {
@@ -191,6 +191,12 @@ var Machine = exports.Machine = function () {
         return false;
       }
     }
+
+    /**
+     * Does exactly van canProcess does, except it does not return a value but throws an error with
+     * description if the machine can't process the action.
+     */
+
   }, {
     key: 'crashForInvalidAction',
     value: function crashForInvalidAction(plain) {
@@ -231,7 +237,7 @@ var Machine = exports.Machine = function () {
         throw new Error('something went wrong, no dest found');
       }
       this.current = dest;
-      this.currentOptions = this.parseOptionsForCurrentState(action.params);
+      this.props = this.parseOptionsForCurrentState(action.params);
     }
 
     /**

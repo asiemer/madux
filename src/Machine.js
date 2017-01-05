@@ -16,13 +16,13 @@ export class Machine {
   locked: boolean;
   initial: string;
   current: ?string;
-  currentOptions: Array<Object>;
+  props: Array<Object>;
   states: Map<string, Connector>;
 
   constructor(...states: Array<State>): void {
     if (states.length >= 1 && areValidStates(states)) {
       this.initial = states[0].name;
-      this.currentOptions = [];
+      this.props = [];
       this.states = states.reduce((map, state) =>
         map.set(state.name, createConnector(state)), new Map());
     } else if (states.length < 1) {
@@ -34,24 +34,24 @@ export class Machine {
   start(): void { this.current = this.initial; }
   isStarted(): boolean { return !!this.current; }
 
-  getOptions(): Object {
-    return this.currentOptions.reduce((obj, opt) =>
+  getProps(): Object {
+    return this.props.reduce((obj, opt) =>
       Object.assign({}, obj, { [opt.name]: opt.value }), {});
   }
 
-  getOptionsToMerge(): Object {
-    return this.currentOptions.filter(opt => opt.merge).reduce((obj, opt) =>
+  getPropsToMerge(): Object {
+    return this.props.filter(opt => opt.merge).reduce((obj, opt) =>
       Object.assign({}, obj, { [opt.name]: opt.value }), {});
   }
 
-  getMergedOptions(action: Action): Object {
-    return Object.assign({}, this.getOptionsToMerge(), action.params);
+  getMergedProps(action: Action): Object {
+    return Object.assign({}, this.getPropsToMerge(), action.params);
   }
 
   updateActionParameters(action: Action): Object {
     return {
       type: action.type,
-      params: this.getMergedOptions(action),
+      params: this.getMergedProps(action),
     };
   }
 
@@ -120,6 +120,10 @@ export class Machine {
     } catch (exc) { return false; }
   }
 
+  /**
+   * Does exactly van canProcess does, except it does not return a value but throws an error with
+   * description if the machine can't process the action.
+   */
   crashForInvalidAction(plain: Action): void {
     if (!plain) throw new Error('action may not be null or undefined');
     if (!isValidAction(plain)) throw new Error('action does not have valid structure');
@@ -149,7 +153,7 @@ export class Machine {
     const dest = connectorA ? connectorA.getDestinationStateName(action.type) : null;
     if (!dest) { throw new Error('something went wrong, no dest found'); }
     this.current = dest;
-    this.currentOptions = this.parseOptionsForCurrentState(action.params);
+    this.props = this.parseOptionsForCurrentState(action.params);
   }
 
   /**

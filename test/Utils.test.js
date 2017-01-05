@@ -89,7 +89,7 @@ describe('Utils.js', () => {
     expect(isValidAction([])).to.equal(false);
     expect(isValidAction('')).to.equal(false);
     expect(isValidAction([1])).to.equal(false);
-    expect(isValidAction({ type: 'A' })).to.equal(false);
+    expect(isValidAction({ type: 'A' })).to.equal(true);
     expect(isValidAction({ type: 'A', params: {} })).to.equal(true);
   });
   it('should check valid props for definitions', () => {
