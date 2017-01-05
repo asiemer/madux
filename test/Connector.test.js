@@ -12,6 +12,13 @@ describe('Connector.js', () => {
   const stateB = { name: 'B' };
   const actionType = 'ACTION';
   const anotherActionType = 'ANOTHER';
+  describe('Creators', () => {
+    it('should create Connector', () => {
+      const connectorA = createConnector(stateA);
+      const connectorB = new Connector(stateA);
+      expect(connectorA.state).to.equal(connectorB.state);
+    });
+  });
   describe('Connector', () => {
     it('creates a Connector with valid state', () => {
       const connector = createConnector(stateA);
@@ -98,13 +105,6 @@ describe('Connector.js', () => {
       expect(connector.getPossibleActions().has(actionType)).to.equal(true);
       expect(connector.getPossibleActions().has(anotherActionType)).to.equal(true);
       expect(connector.getPossibleActions().size).to.equal(2);
-    });
-  });
-  describe('Creators', () => {
-    it('should create Connector', () => {
-      const connectorA = createConnector(stateA);
-      const connectorB = new Connector(stateA);
-      expect(connectorA.state).to.equal(connectorB.state);
     });
   });
 });

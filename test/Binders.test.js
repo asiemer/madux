@@ -14,6 +14,23 @@ describe('Binders.js', () => {
   const state1 = { name: 'A' };
   const state2 = { name: 'B' };
   const state3 = { name: 'C' };
+  describe('Creators', () => {
+    it('should create DoubleBinder', () => {
+      const machine = createMachine(state1, state2);
+      const raw = new DoubleBinder(machine, state1, state2);
+      const cre = createDoubleBinder(machine, state1, state2);
+      expect(raw.end).to.equal(raw.end);
+      expect(raw.start).to.equal(cre.start);
+      expect(raw.machine).to.equal(raw.machine);
+    });
+    it('should create SingleBinder', () => {
+      const machine = createMachine(state1, state2);
+      const raw = new SingleBinder(machine, state1);
+      const cre = createSingleBinder(machine, state1);
+      expect(raw.start).to.equal(cre.start);
+      expect(raw.machine).to.equal(raw.machine);
+    });
+  });
   describe('DoubleBinder', () => {
     it('creates a DoubleBinder with valid parameters', () => {
       const machine = createMachine(state1, state2, state3);
@@ -132,24 +149,6 @@ describe('Binders.js', () => {
       expect(() => single.to(null)).to.throw();
       expect(() => single.to(undefined)).to.throw();
       expect(() => single.to(state3)).to.throw();
-    });
-  });
-
-  describe('Creators', () => {
-    it('should create DoubleBinder', () => {
-      const machine = createMachine(state1, state2);
-      const raw = new DoubleBinder(machine, state1, state2);
-      const cre = createDoubleBinder(machine, state1, state2);
-      expect(raw.end).to.equal(raw.end);
-      expect(raw.start).to.equal(cre.start);
-      expect(raw.machine).to.equal(raw.machine);
-    });
-    it('should create SingleBinder', () => {
-      const machine = createMachine(state1, state2);
-      const raw = new SingleBinder(machine, state1);
-      const cre = createSingleBinder(machine, state1);
-      expect(raw.start).to.equal(cre.start);
-      expect(raw.machine).to.equal(raw.machine);
     });
   });
 });
