@@ -73,7 +73,7 @@ describe('Scenarios', () => {
     store.dispatch(send('hello'));
     expect(store.machine.getCurrentState()).to.equal(ROOM);
     console.log(store.machine.options);
-    
+
     store.dispatch(leave());
     store.dispatch(logout());
     expect(store.machine.getCurrentState()).to.equal(STRANGER);

@@ -16,13 +16,13 @@ export class Machine {
   locked: boolean;
   initial: string;
   current: ?string;
-  options: Object;
+  currentOptions: Array<Object>;
   states: Map<string, Connector>;
 
   constructor(...states: Array<State>): void {
     if (states.length >= 1 && areValidStates(states)) {
       this.initial = states[0].name;
-      this.options = {};
+      this.currentOptions = [];
       this.states = states.reduce((map, state) =>
         map.set(state.name, createConnector(state)), new Map());
     } else if (states.length < 1) {
@@ -34,7 +34,12 @@ export class Machine {
   start(): void { this.current = this.initial; }
   isStarted(): boolean { return !!this.current; }
 
-  getOptions(): Object { return this.options || {}; }
+  getOptions(): Object {
+    return this.currentOptions.reduce((obj, opt) =>
+      Object.assign({}, obj, { [opt.name]: opt.value }), {});
+  }
+
+  // TODO: MergeOptionsBeforeDispatch?
 
   updateOptions(): void {
     this.options = this.options.filter(option => option.remember.indexOf(this.current) >= 0);
