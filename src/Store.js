@@ -43,11 +43,10 @@ export class Store {
   dispatch(action: Action) {
     const middlewares = this.middlewares = this.nMiddlewares;
     middlewares.reduce((d: Dispatch, f: Middleware) => f(d), (finalAction: Action) => {
-      if (this.machine.canProcess(finalAction)) {
-        const prv = this.machine.getCurrentState();
-        this.machine.process(finalAction);
-        this.callListeners(prv, finalAction, this.machine.getCurrentState());
-      } else { throw new Error(`unable to process action: ${action.type}`); }
+      this.machine.crashForInvalidAction(finalAction);
+      const prv = this.machine.getCurrentState();
+      this.machine.process(finalAction);
+      this.callListeners(prv, finalAction, this.machine.getCurrentState());
     })(action);
   }
 

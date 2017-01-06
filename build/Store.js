@@ -55,13 +55,10 @@ var Store = exports.Store = function () {
       middlewares.reduce(function (d, f) {
         return f(d);
       }, function (finalAction) {
-        if (_this.machine.canProcess(finalAction)) {
-          var _prv = _this.machine.getCurrentState();
-          _this.machine.process(finalAction);
-          _this.callListeners(_prv, finalAction, _this.machine.getCurrentState());
-        } else {
-          throw new Error('unable to process action: ' + action.type);
-        }
+        _this.machine.crashForInvalidAction(finalAction);
+        var prv = _this.machine.getCurrentState();
+        _this.machine.process(finalAction);
+        _this.callListeners(prv, finalAction, _this.machine.getCurrentState());
       })(action);
     }
 
