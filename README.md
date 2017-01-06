@@ -14,7 +14,9 @@
   <br />
 </p>
 
-**Madux** is an easy way to represent the internal state of your application as a finite state machine. It can be used in lots of different ways. If you are looking to use madux in your own application, I advise you to take a look at **[Madux-bind](https://github.com/Jense5/madux-bind)** which allows you to connect functions to different transitions of the internal state. This makes it easy to create an application with madux in some kind of declarative way. I am currently writing a real-life command line tool with madux and I will publish a link here when it is finished.
+**Madux** is an easy way to represent the internal state of your application as a finite state machine. It can be used in lots of different ways. If you are looking to use madux in your own application, I advise you to take a look at **[Madux-bind](https://github.com/Jense5/madux-bind)** which allows you to connect functions to different transitions of the internal state. This makes it easy to create an application with madux in some kind of declarative way. I am currently writing a real-life command line tool with madux and I will publish a link here when it is finished. I do assume in the example below that you already know the basics of **[Redux](https://github.com/reactjs/redux)**.
+
+Note that this is just a proof-of-concept and not a commercial release so it might be possible that there is some functionality that can be implemented in a more efficient way. The version should be stable tho (run `yarn test` to see for yourself).
 
 Install it via **npm** - `$ npm install --save madux`
 
@@ -138,7 +140,6 @@ action creators. Because we are working in a single file for this example, our f
 
 ```js
 
-/*** STATES ***/
 const OUTSIDE = { name: 'OUTSIDE' };
 const HOUSE = {
   name: 'HOUSE',
@@ -158,13 +159,11 @@ const ROOM = {
   }],
 };
 
-/*** ACTION TYPES ***/
 const ENTER_HOUSE = 'ENTER _HOUSE'
 const LEAVE_HOUSE = 'LEAVE_HOUSE';
 const ENTER_ROOM = 'ENTER_ROOM';
 const LEAVE_ROOM = 'LEAVE_ROOM';
 
-/*** ACTION CREATORS ***/
 const enterHouse = houseNumber => ({ type: ENTER_HOUSE, params: { houseNumber } });
 const enterRoom = roomNumber => ({ type: ENTER_ROOM, params: { roomNumber } });
 const leaveHouse = () => ({ type: LEAVE_HOUSE });
@@ -172,37 +171,56 @@ const leaveRoom = () => ({ type: LEAVE_ROOM });
 
 ```
 
+## Defining The State Machine
+
+We have all the elements of our state machine right now, but haven't defined our state machine itself.
+This is possible by importing the `createMachine` function from madux and use the builder pattern
+as shown below. Not that the order of the states are not important, however the first state will
+be the initial state.
+
 ```js
-// Import madux
-import { createStore, createMachine, State } from 'madux';
+import { createMachine } from 'madux';
 
-// Create some states.
-const LOBBY = new State('LOBBY');
-const ROOM = new State('ROOM');
+// Define our machine!
+const machine = createMachine(OUTSIDE, HOUSE, ROOM);
+machine.from(OUTSIDE).to(HOUSE).on(ENTER_HOUSE);
+machine.from(HOUSE).to(OUTSIDE).on(LEAVE_HOUSE);
+machine.from(HOUSE).to(ROOM).on(ENTER_ROOM);
+machine.From(ROOM).to(HOUSE).on(LEAVE_HOUSE);
+```
 
-// Create some Actions.
-const ENTER = 'ENTER';
-const LEAVE = 'LEAVE';
+## Building a store
 
-// Create a machine.
-const machine = createMachine([LOBBY, ROOM]);
-machine.from(LOBBY).to(ROOM).on(ENTER);
-machine.from(ROOM).to(LOBBY).on(LEAVE);
+Right now, the only thing we still have to do is build a store. You can see the store as some kind
+of redux-like store, but it works different internally. So dispatch any actions you want from now on!
 
-// Create a store.
-const store = createStore(machine);
+```js
+const store = machine.buildStore();
 
-// Subscribe to the store.
-store.subscribe((prev, act, next) => {
-  console.log(`Welcome to the ${next.name}.`);
+// You can also subscribe to the store.
+// The subscribe function will return a function that makes it
+// possible to unsubscribe.
+const unsubscribe = store.subscribe((prev, action, next) => {
+  // This function will now be called on every transition!
 });
 
-// Dispatch some actions!
-store.dispatch({ type: ENTER }); // Console: `Welcome to the ROOM.`
-store.dispatch({ type: LEAVE }); // Console: `Welcome to the LOBBY.`
+store.dispatch(enterHouse(5));
+store.disptach(enterRoom(3));
+store.dispatch(leaveRoom());
+
+unsubscribe();
 
 ```
 
-### License
+## Middleware
 
-Licensed under **MIT**
+It is also possible to add middleware. I will add more documentation about this in the future. If
+you really need it, check the tests. Basically it can be done like this.
+
+```js
+const store = machine.buildStore().bindMiddlewares(middlewareA, middlewareB);
+```
+
+## More info
+
+For more info, send en email to Jensenbernard5 (at) Gmail.com or [tweet](https://twitter.com/PreShove);
