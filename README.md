@@ -1,5 +1,5 @@
 
-# <img src='https://raw.githubusercontent.com/Jense5/madux/master/logo/icon.repo.png' title='madux' height='60' />
+# Madux
 
 A predictable state container with finite state machine for JS tools.
 
