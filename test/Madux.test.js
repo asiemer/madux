@@ -8,12 +8,10 @@ describe('Madux.js', () => {
   const UNLOCKED = { name: 'UNLOCKED' };
   const LOCK = 'LOCK';
   const UNLOCK = 'UNLOCK';
-  describe('Main', () => {
-    it('should work with basic use case', () => {
-      const machine = createMachine(UNLOCKED, LOCKED);
-      machine.from(LOCKED).to(UNLOCKED).on(UNLOCK);
-      machine.from(UNLOCKED).to(LOCKED).on(LOCK);
-      machine.buildStore();
-    });
+  it('works with basic imports', () => {
+    const machine = createMachine(UNLOCKED, LOCKED);
+    machine.from(LOCKED).to(UNLOCKED).on(UNLOCK);
+    machine.from(UNLOCKED).to(LOCKED).on(LOCK);
+    machine.buildStore();
   });
 });
