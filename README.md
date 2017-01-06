@@ -10,13 +10,14 @@
   <img src="https://travis-ci.org/Jense5/madux.svg?branch=master">
   <img src="https://img.shields.io/npm/v/madux.svg">
   <img src="https://img.shields.io/npm/l/madux.svg">
+  <a href="https://gitter.im/madux-dev/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link"><img src="https://img.shields.io/gitter/room/gitterHQ/gitter.svg"></a>
   <br />
   <br />
 </p>
 
 **Madux** is an easy way to represent the internal state of your application as a finite state machine. It can be used in lots of different ways. If you are looking to use madux in your own application, I advise you to take a look at **[Madux-bind](https://github.com/Jense5/madux-bind)** which allows you to connect functions to different transitions of the internal state. This makes it easy to create an application with madux in some kind of declarative way. I am currently writing a real-life command line tool with madux and I will publish a link here when it is finished. I do assume in the example below that you already know the basics of **[Redux](https://github.com/reactjs/redux)**.
 
-Note that this is just a proof-of-concept and not a commercial release so it might be possible that there is some functionality that can be implemented in a more efficient way. However this library should be stable (run `yarn test` to see for yourself or check the build badge).
+Note that this is just a proof-of-concept and not a commercial release so it might be possible that there is some functionality that can be implemented in a more efficient way. However, this library should be stable (run `yarn test` to see for yourself or check the build badge).
 
 Install it via **npm** - `$ npm install --save madux`
 
@@ -61,7 +62,7 @@ const HOUSE = { name: 'HOUSE' };
 const ROOM = { name: 'ROOM' };
 ```
 
-In some use cases, these basic states might do the trick. In our example we need a bit more data. For example when we are in a `HOUSE`, we also want to know the number of the house we are in. To do so, we can add props to different states. Note that when we are in the `ROOM` state we need to have the `houseNumber` and `roomNumber` data.
+In some use cases, these basic states might do the trick. In our example we need a bit more data. For example when we are in a `HOUSE`, we also want to know the number of the house we are in. To do so, we can add props to different states. Note that when we are in the `ROOM` state we need to have the `houseNumber` and `roomNumber` data in order to know the exact room we are in.
 
 ```js
 // Update the states to have some basic properties. As you can see below, it
@@ -98,7 +99,7 @@ Different transitions of the finite state machine can be triggered by different 
 // Action types can be represented as simple strings. It is advised to store
 // them in variables to prevent some stupid errors. In our example, we only need
 // four different action types.
-const ENTER_HOUSE = 'ENTER _HOUSE'
+const ENTER_HOUSE = 'ENTER_HOUSE'
 const LEAVE_HOUSE = 'LEAVE_HOUSE';
 const ENTER_ROOM = 'ENTER_ROOM';
 const LEAVE_ROOM = 'LEAVE_ROOM';
@@ -110,7 +111,7 @@ const action = { type: ENTER_HOUSE };
 Note that in order to go from one state to the other with a given action, the parameters of the action should fullfil the properties of the destination state. This means that in order to be able to go from `OUTSIDE` to `ROOM`, the action should look like this.
 
 ```js
-// Note that the hosueNumber can be whatever you want.
+// Note that the houseNumber can be whatever you want.
 const action = {
   type: ENTER_HOUSE,
   params: {
@@ -121,7 +122,7 @@ const action = {
 
 ## Action Creators
 
-In order to be consistent throughout you application, it is advised to use action creators. These
+In order to be consistent throughout your application, it is advised to use action creators. These
 are simple functions that accept parameters in order to create actions. For our four action types,
 we need four action creators.
 
@@ -134,9 +135,9 @@ const leaveRoom = () => ({ type: LEAVE_ROOM });
 ```
 
 Note that we did not set a `houseNumber` parameter for the `ENTER_ROOM` action. As you have seen before,
-it will now be impossible to access the `ROOM` state without the `roomNumber` parameter. It's pretty
+it will now be impossible to access the `ROOM` state without the `houseNumber` parameter. It's
 trivial to see that you don't want to pass the `roomNumber` and `houseNumber` to the state when it
-should already know in which room you are. This can be solved by the build-in merge feature.
+should already know in which house you are. This can be solved by the build-in merge feature.
 
 For now, a property that we define in the definition of a state has only a name and a value that
 represents whether or not the property is required. We will add a third (optional) value, namely merge.
@@ -171,6 +172,7 @@ const HOUSE = {
   props: [{
     name: 'houseNumber',
     required: true,
+    merge: true,
   }],
 };
 const ROOM = {
@@ -184,7 +186,7 @@ const ROOM = {
   }],
 };
 
-const ENTER_HOUSE = 'ENTER _HOUSE'
+const ENTER_HOUSE = 'ENTER_HOUSE'
 const LEAVE_HOUSE = 'LEAVE_HOUSE';
 const ENTER_ROOM = 'ENTER_ROOM';
 const LEAVE_ROOM = 'LEAVE_ROOM';
@@ -198,9 +200,9 @@ const leaveRoom = () => ({ type: LEAVE_ROOM });
 
 ## Defining The State Machine
 
-We have all the elements of our state machine right now, but haven't defined our state machine itself.
+We have all the elements for our state machine right now, but haven't defined our state machine itself.
 This is possible by importing the `createMachine` function from madux and use the builder pattern
-as shown below. Not that the order of the states are not important, however the first state will
+as shown below. Note that the order of the states are not important, however the first state will
 be the initial state.
 
 ```js
@@ -216,15 +218,14 @@ machine.From(ROOM).to(HOUSE).on(LEAVE_HOUSE);
 
 ## Building a store
 
-Right now, the only thing we still have to do is build a store. You can see the store as some kind
+Right now, the only thing we still have to do is build a store which holds our state. You can see the store as some kind
 of redux-like store, but it works different internally. So dispatch any actions you want from now on!
 
 ```js
 const store = machine.buildStore();
 
 // You can also subscribe to the store.
-// The subscribe function will return a function that makes it
-// possible to unsubscribe.
+// The subscribe function will return a function that makes it possible to unsubscribe.
 const unsubscribe = store.subscribe((prev, action, next) => {
   // This function will now be called on every transition!
 });
@@ -248,4 +249,4 @@ const store = machine.buildStore().bindMiddlewares(middlewareA, middlewareB);
 
 ## More info
 
-For more info, send en email to Jensenbernard5 (at) Gmail.com or [tweet](https://twitter.com/PreShove).
+Ask me on [Twitter](https://twitter.com/PreShove) or [Gitter](https://gitter.im/madux-dev/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
