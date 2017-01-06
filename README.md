@@ -18,13 +18,13 @@
 
 Install it via **npm** - `$ npm install --save madux`
 
-### Basic Madux Example
+<h1 align="center">Basic Madux Example</h1>
 
 <p align="center">
   <img src="http://i.imgur.com/Jdehzch.png" />
 </p>
 
-#### Defining States
+## Defining States
 The first thing you should do when creating a state machine with madux, is thinking about the possible states. In our example we will have three states: `OUTSIDE`, `HOUSE`, and `ROOM`. Let's start these as plain JavaScript objects.
 
 ```js
@@ -64,7 +64,7 @@ const ROOM = {
 
 Note that there is one small issue in the definition of these states that we will fix later. For now, let's assume that these states will do the trick.
 
-#### Actions
+## Actions
 Different transitions of the finite state machine can be triggered by different actions. An action is a simple JavaScript object with a type property. The type of the Action should be a predefined string. Let's start by creating the different action types.
 
 ```js
@@ -92,7 +92,7 @@ const action = {
 };
 ```
 
-#### Action Creators
+## Action Creators
 
 In order to be consistent throughout you application, it is advised to use action creators. These
 are simple functions that accept parameters in order to create actions. For our four action types,
