@@ -16,11 +16,36 @@
 
 **Madux** is an easy way to represent the internal state of your application as a finite state machine. It can be used in lots of different ways. If you are looking to use madux in your own application, I advise you to take a look at **[Madux-bind](https://github.com/Jense5/madux-bind)** which allows you to connect functions to different transitions of the internal state. This makes it easy to create an application with madux in some kind of declarative way. I am currently writing a real-life command line tool with madux and I will publish a link here when it is finished. I do assume in the example below that you already know the basics of **[Redux](https://github.com/reactjs/redux)**.
 
-Note that this is just a proof-of-concept and not a commercial release so it might be possible that there is some functionality that can be implemented in a more efficient way. The version should be stable tho (run `yarn test` to see for yourself).
+Note that this is just a proof-of-concept and not a commercial release so it might be possible that there is some functionality that can be implemented in a more efficient way. However this library should be stable (run `yarn test` to see for yourself or check the build badge).
 
 Install it via **npm** - `$ npm install --save madux`
 
-<h1 align="center">Basic Madux Example</h1>
+<h1 align="center">Basic Snippet</h1>
+
+```js
+import { createMachine } from 'madux';
+
+// Create a basic state machine.
+const machine = createMachine('green', 'red');
+machine.from('green').to('red').on('error');
+machine.from('red').to('green').on('fix');
+
+// Convert it to a store for your state.
+const store = machine.buildStore();
+
+// Subscribe to the state.
+store.subscribe((prev, action, next) => {
+  console.log(prev);
+  console.log(action);
+  console.log(next);
+});
+
+// Have fun!
+store.dispatch({ type: 'error' });  // Will log...
+store.dispatch({ type: 'fix' });    // Will log...
+```
+
+<h1 align="center">A First Madux Example</h1>
 
 <p align="center">
   <img src="http://i.imgur.com/Jdehzch.png" />
@@ -223,4 +248,4 @@ const store = machine.buildStore().bindMiddlewares(middlewareA, middlewareB);
 
 ## More info
 
-For more info, send en email to Jensenbernard5 (at) Gmail.com or [tweet](https://twitter.com/PreShove);
+For more info, send en email to Jensenbernard5 (at) Gmail.com or [tweet](https://twitter.com/PreShove).
