@@ -14,12 +14,9 @@
   <br />
 </p>
 
-```js
-$ npm install --save madux
-```
-
 **Madux** is an easy way to represent the internal state of your application as a finite state machine. It can be used in lots of different ways. If you are looking to use madux in your own application, I advise you to take a look at **[Madux-bind](https://github.com/Jense5/madux-bind)** which allows you to connect functions to different transitions of the internal state. This makes it easy to create an application with madux in some kind of declarative way. I am currently writing a real-life command line tool with madux and I will publish a link here when it is finished.
 
+Install it via **npm** - `$ npm install --save madux`
 
 ### Basic Madux Example
 
