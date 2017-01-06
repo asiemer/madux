@@ -23,11 +23,18 @@ Install it via **npm** - `$ npm install --save madux`
 <p align="center">
   <img src="http://i.imgur.com/Jdehzch.png" />
 </p>
-You can install that latest stable version within your project with npm or yarn. Madux looks a lot like Redux in this basic example, but will differ more when we expand it to a [real cli tool](https://jense5.gitbooks.io/madux/content/). For more details, check the [docs](https://jense5.gitbooks.io/madux/content/).
 
+##### Defining States
+The first thing you should do when creating a state machine with madux, is thinking about the possible states. In our example we will have three states: `OUTSIDE`, `HOUSE`, and `ROOM`. Let's start these as plain JavaScript objects.
+
+```js
+// A state is just a plain javascript object with a name property.
+const OUTSIDE = { name: 'OUTSIDE' };
+const HOUSE = { name: 'HOUSE' };
+const ROOM = { name: 'ROOM' };
 ```
-$ yarn add madux
-```
+
+In some use cases, these simple states might do the trick. In our example we need a bit more complex
 
 ```js
 // Import madux
