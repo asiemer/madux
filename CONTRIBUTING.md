@@ -4,21 +4,7 @@
 
 ## Next Version
 
-#### Internal updates
-- [x] More detailed errors if canDispatch is false...
-- [x] Refactor / Check all src files...
-
-#### Final tests
-- [x] Add tests for all functions!
-- [x] Remove too many subtitles in the test files...
-- [x] Add up to 5 scenario tests with all functions...
-
-#### Update README before update
-- [ ] Update readme with new example...
-- [ ] Update readme with experiment or proof-of-concept notice...
-
 #### Rebrand MADUX with flat design
-- [ ] Create a new flat icon
 - [ ] Make a sample Github Site
 - [ ] Create the basic Madux docs
 
