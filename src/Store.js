@@ -7,8 +7,8 @@ import type { Action, Middleware, Dispatch, State } from './Types';
 export class Store {
 
   machine: Machine;
-  listeners: Array<(prv: ?State, act: Action, nxt: ?State) => void>;
-  nListeners: Array<(prv: ?State, act: Action, nxt: ?State) => void>;
+  listeners: Array<(prv: ?Object, act: Action, nxt: ?Object) => void>;
+  nListeners: Array<(prv: ?Object, act: Action, nxt: ?Object) => void>;
   middlewares: Array<Middleware>;
   nMiddlewares: Array<Middleware>;
 
@@ -45,19 +45,27 @@ export class Store {
     middlewares.reduce((d: Dispatch, f: Middleware) => f(d), (finalAction: Action) => {
       this.machine.crashForInvalidAction(finalAction);
       const prv = this.machine.getCurrentState();
+      const pname = prv ? prv.name : '';
+      const pprops = this.machine.getProps();
       this.machine.process(finalAction);
-      this.callListeners(prv, finalAction, this.machine.getCurrentState());
+      const nxt = this.machine.getCurrentState();
+      const nname = nxt ? nxt.name : '';
+      const nprops = this.machine.getProps();
+      this.callListeners(
+        { name: pname, props: pprops },
+        finalAction,
+        { name: nname, props: nprops });
     })(action);
   }
 
   /**
    * Makes a backup of the list of listeners of this store and then calls them all with the
    * given previous State, action and next State.
-   * @param {?State} prv - The previous State.
+   * @param {?Object} prv - The previous State.
    * @param {Action} act - The action.
-   * @param {?State} nxt - The next State.
+   * @param {?Object} nxt - The next State.
    */
-  callListeners(prv: ?State, act: Action, nxt: ?State) {
+  callListeners(prv: ?Object, act: Action, nxt: ?Object) {
     const listeners = this.listeners = this.nListeners;
     for (let i = 0; i < listeners.length; i += 1) {
       const listener = listeners[i];

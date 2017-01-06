@@ -57,17 +57,22 @@ var Store = exports.Store = function () {
       }, function (finalAction) {
         _this.machine.crashForInvalidAction(finalAction);
         var prv = _this.machine.getCurrentState();
+        var pname = prv ? prv.name : '';
+        var pprops = _this.machine.getProps();
         _this.machine.process(finalAction);
-        _this.callListeners(prv, finalAction, _this.machine.getCurrentState());
+        var nxt = _this.machine.getCurrentState();
+        var nname = nxt ? nxt.name : '';
+        var nprops = _this.machine.getProps();
+        _this.callListeners({ name: pname, props: pprops }, finalAction, { name: nname, props: nprops });
       })(action);
     }
 
     /**
      * Makes a backup of the list of listeners of this store and then calls them all with the
      * given previous State, action and next State.
-     * @param {?State} prv - The previous State.
+     * @param {?Object} prv - The previous State.
      * @param {Action} act - The action.
-     * @param {?State} nxt - The next State.
+     * @param {?Object} nxt - The next State.
      */
 
   }, {
