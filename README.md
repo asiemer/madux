@@ -1,7 +1,17 @@
 
-# Madux
+<p align="center">
+  <img src="http://i.imgur.com/8ZLX6ti.png" width="500" />
+  <br />
+  <br />
+  <br />
+  <img src="https://img.shields.io/badge/status-development-16a085.svg">
+  <img src="https://travis-ci.org/Jense5/madux.svg?branch=master">
+  <img src="https://img.shields.io/npm/v/madux.svg">
+  <img src="https://img.shields.io/npm/l/madux.svg">
+  <br />
+  <br />
+</p>
 
-A predictable state container with finite state machine for JS tools.
 
 [Madux](https://github.com/Jense5/madux) uses a finite state machine to hold track of the state of your NodeJS or JavaScript application. It can be used in a variety of ways, without
 
@@ -9,10 +19,6 @@ A predictable state container with finite state machine for JS tools.
 
 Although Madux can be used on its own, it's strongly advised to use it in combination with [madux-bind](https://github.com/Jense5/madux-bind). It makes it possible to build a JS app in a declarative way which makes it easier to create a consistent and bug-free application. You can find a hands-on tutorial [here](https://jense5.gitbooks.io/madux/content/).
 
-<img src="https://img.shields.io/badge/status-development-16a085.svg">
-<img src="https://travis-ci.org/Jense5/madux.svg?branch=master">
-<img src="https://img.shields.io/npm/v/madux.svg">
-<img src="https://img.shields.io/npm/l/madux.svg">
 
 ### Experience
 
@@ -21,7 +27,7 @@ Make sure you understand the fundamentals of state machines, as well as how a pr
 ### Basic Madux Example
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Jense5/madux/master/logo/basic.png" />
+  <img src="http://i.imgur.com/Jdehzch.png" />
 </p>
 You can install that latest stable version within your project with npm or yarn. Madux looks a lot like Redux in this basic example, but will differ more when we expand it to a [real cli tool](https://jense5.gitbooks.io/madux/content/). For more details, check the [docs](https://jense5.gitbooks.io/madux/content/).
 
