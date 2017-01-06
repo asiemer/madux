@@ -14,17 +14,13 @@
   <br />
 </p>
 
+[Madux](https://github.com/Jense5/madux) is an easy way to represent the internal state of your application as a finite state machine. It can be used in lots of different ways. If you are looking to use madux in your own application, I advise you to take a look at [Madux-bind](https://github.com/Jense5/madux-bind) which allows you to connect functions to different transitions of the internal state. This makes it easy to create an application with madux in some kind of declarative way. I am currently writing a real-life command line tool with madux and I will publish a link here when it is finished.
 
-[Madux](https://github.com/Jense5/madux) uses a finite state machine to hold track of the state of your NodeJS or JavaScript application. It can be used in a variety of ways, without
-
-[Madux](https://github.com/Jense5/madux) is a predictable state container for command line tools written in JS. It can be seen as an alternative to [Redux](https://github.com/reactjs/redux), although it requires a different way of thinking about the state of the app. In Madux, the state of the app is represented as a finite [state machine](https://en.wikipedia.org/wiki/Finite-state_machine).
-
-Although Madux can be used on its own, it's strongly advised to use it in combination with [madux-bind](https://github.com/Jense5/madux-bind). It makes it possible to build a JS app in a declarative way which makes it easier to create a consistent and bug-free application. You can find a hands-on tutorial [here](https://jense5.gitbooks.io/madux/content/).
-
-
-### Experience
-
-Make sure you understand the fundamentals of state machines, as well as how a predictable state container works, before deciding if you should use madux and madux-bind. It has helped me a lot in the past, although it's not the best solution for every project. The [documentation](https://jense5.gitbooks.io/madux/content/) should make clear if madux is a good option for your app or not.
+```js
+$ npm install --save madux
+# or
+$ yarn add madux
+```
 
 ### Basic Madux Example
 

@@ -1,0 +1,16 @@
+@startuml
+
+[*] --> OUTSIDE
+
+OUTSIDE --> HOUSE
+HOUSE --> OUTSIDE
+
+HOUSE --> ROOM
+ROOM --> HOUSE
+
+HOUSE: houseNumber
+
+ROOM: houseNumber
+ROOM: roomNumber
+
+@enduml
