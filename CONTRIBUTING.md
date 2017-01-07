@@ -11,5 +11,6 @@
 ## Version 0.2.0
 
 - [ ] When Madux-bind is finished...
+- [ ] Add Madux-bind to this repo!
 
 Madux-bind should be finished because we want to be sure that the API is very good (aka we need hands-on experience).
